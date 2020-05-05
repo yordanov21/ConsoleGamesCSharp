@@ -9,3 +9,14 @@ C:\Users\yyord\OneDrive\Desktop\My projects\C#_Console_Games\Tetris\tetris\tetri
 C:\Users\yyord\OneDrive\Desktop\My projects\C#_Console_Games\Tetris\tetris\tetris\obj\Debug\netcoreapp3.1\tetris.AssemblyInfo.cs
 C:\Users\yyord\OneDrive\Desktop\My projects\C#_Console_Games\Tetris\tetris\tetris\obj\Debug\netcoreapp3.1\tetris.dll
 C:\Users\yyord\OneDrive\Desktop\My projects\C#_Console_Games\Tetris\tetris\tetris\obj\Debug\netcoreapp3.1\tetris.pdb
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\bin\Debug\netcoreapp3.1\tetris.exe
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\bin\Debug\netcoreapp3.1\tetris.deps.json
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\bin\Debug\netcoreapp3.1\tetris.runtimeconfig.json
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\bin\Debug\netcoreapp3.1\tetris.runtimeconfig.dev.json
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\bin\Debug\netcoreapp3.1\tetris.dll
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\bin\Debug\netcoreapp3.1\tetris.pdb
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\obj\Debug\netcoreapp3.1\tetris.csprojAssemblyReference.cache
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\obj\Debug\netcoreapp3.1\tetris.AssemblyInfoInputs.cache
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\obj\Debug\netcoreapp3.1\tetris.AssemblyInfo.cs
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\obj\Debug\netcoreapp3.1\tetris.dll
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\obj\Debug\netcoreapp3.1\tetris.pdb

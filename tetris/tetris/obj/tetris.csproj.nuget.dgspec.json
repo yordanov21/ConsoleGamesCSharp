@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\yyord\\OneDrive\\Desktop\\My projects\\C#_Console_Games\\ConsoleGamesC-\\tetris\\tetris\\tetris.csproj": {}
+    "C:\\Users\\yyord\\OneDrive\\Desktop\\My projects\\Console_Games\\ConsoleGamesCSharp\\tetris\\tetris\\tetris.csproj": {}
   },
   "projects": {
-    "C:\\Users\\yyord\\OneDrive\\Desktop\\My projects\\C#_Console_Games\\ConsoleGamesC-\\tetris\\tetris\\tetris.csproj": {
+    "C:\\Users\\yyord\\OneDrive\\Desktop\\My projects\\Console_Games\\ConsoleGamesCSharp\\tetris\\tetris\\tetris.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\yyord\\OneDrive\\Desktop\\My projects\\C#_Console_Games\\ConsoleGamesC-\\tetris\\tetris\\tetris.csproj",
+        "projectUniqueName": "C:\\Users\\yyord\\OneDrive\\Desktop\\My projects\\Console_Games\\ConsoleGamesCSharp\\tetris\\tetris\\tetris.csproj",
         "projectName": "tetris",
-        "projectPath": "C:\\Users\\yyord\\OneDrive\\Desktop\\My projects\\C#_Console_Games\\ConsoleGamesC-\\tetris\\tetris\\tetris.csproj",
+        "projectPath": "C:\\Users\\yyord\\OneDrive\\Desktop\\My projects\\Console_Games\\ConsoleGamesCSharp\\tetris\\tetris\\tetris.csproj",
         "packagesPath": "C:\\Users\\yyord\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\yyord\\OneDrive\\Desktop\\My projects\\C#_Console_Games\\ConsoleGamesC-\\tetris\\tetris\\obj\\",
+        "outputPath": "C:\\Users\\yyord\\OneDrive\\Desktop\\My projects\\Console_Games\\ConsoleGamesCSharp\\tetris\\tetris\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

@@ -54,10 +54,11 @@ namespace tetris
         static int Score = 0;
         static int Frame = 0;
         static int FrameToMoveFigure = 15;
-        static int CurrentFigureIndex = 2;
+        static bool[,] CurrentFigure = null;
         static int CurrentFigureRow = 0;
         static int CurrentFigureCol = 0;
         static bool[,] TetrisField = new bool[TetrisRows, TetrisCols];
+        static Random Random = new Random();
 
         static void Main(string[] args)
         {
@@ -67,8 +68,9 @@ namespace tetris
             Console.WindowWidth = ConsoleCols;
             Console.BufferHeight = ConsoleRows + 1;
             Console.BufferWidth = ConsoleCols;
-            DrawBorder();
-            DrawInfo();
+            CurrentFigure = TetrisFigures[Random.Next(0, TetrisFigures.Count)];
+            //DrawBorder();
+            //DrawInfo();
             while (true)
             {
                 Frame++;
@@ -89,13 +91,19 @@ namespace tetris
 
                     if (key.Key == ConsoleKey.LeftArrow || key.Key == ConsoleKey.A)
                     {
-                        //TODO: Move current figure to left
-                        CurrentFigureCol--; //TODO: out of range
+                        if (CurrentFigureCol >= 1)
+                        {
+                            CurrentFigureCol--;
+                        }
+                        
                     }
                     if (key.Key == ConsoleKey.RightArrow || key.Key == ConsoleKey.D)
                     {
-                        //TODO: Move current figure to right
-                        CurrentFigureCol++; //TODO: out of range
+                        if (CurrentFigureCol < TetrisCols-CurrentFigure.GetLength(1))
+                        {
+                            CurrentFigureCol++;
+                        }
+                      
                     }
                     if (key.Key == ConsoleKey.UpArrow || key.Key == ConsoleKey.W)
                     {
@@ -120,12 +128,16 @@ namespace tetris
                 }
                 // user input
                 // change state
-                //if (Collision())
-                //{
-                //    AddCurrentFigureToTetrisField()
-                //    CheckForFullLines()
-                //    if(lines remove) score++  
-                //}
+                if (Collision())
+                {
+
+                    CurrentFigure = TetrisFigures[Random.Next(0, TetrisFigures.Count)];
+                    CurrentFigureCol = 0;
+                    CurrentFigureRow = 0;
+                    AddCurrentFigureToTetrisField();
+                  //  CheckForFullLines()
+                  // if(lines remove) score++  
+                }
                 
                 //Redraw UI
                 DrawBorder();
@@ -138,23 +150,37 @@ namespace tetris
             }
         }
 
-       
+        private static void AddCurrentFigureToTetrisField()
+        {
+          //
+        }
+
+        static bool Collision()
+        {
+            if (CurrentFigureRow + CurrentFigure.GetLength(0) == TetrisRows)
+            {
+                return true;
+            }
+            return false;
+        }
         static void DrawInfo()
         {
             Write("Score:", 1, TetrisCols + 3);
             Write(Score.ToString(), 2, TetrisCols + 3);
             Write("Frame:", 4, TetrisCols + 3);
             Write(Frame.ToString(), 5, TetrisCols + 3);
+            Write("Position:", 7, TetrisCols + 3);
+            Write($"{CurrentFigureCol}", 8, TetrisCols+3);
         }
 
         static void DrawCurrentFigure()
         {
-            var currentFigure = TetrisFigures[CurrentFigureIndex];
-            for (int row = 0; row < currentFigure.GetLength(0); row++)
+       
+            for (int row = 0; row < CurrentFigure.GetLength(0); row++)
             {
-                for (int col = 0; col < currentFigure.GetLength(1); col++)
+                for (int col = 0; col < CurrentFigure.GetLength(1); col++)
                 {
-                    if (currentFigure[row, col])
+                    if (CurrentFigure[row, col])
                     {
                         Write("*", row+1+CurrentFigureRow, col+1+CurrentFigureCol);
                     } 

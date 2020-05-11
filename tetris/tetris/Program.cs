@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Text;
+using System.Text.Encodings;
 
 namespace tetris
 {
@@ -68,6 +69,7 @@ namespace tetris
 
         static void Main(string[] args)
         {
+            Console.OutputEncoding = Encoding.UTF8;
             PlayMusic();
 
             if (File.Exists(ScoresFileName))
@@ -322,7 +324,7 @@ namespace tetris
                 {
                     if (TetrisField[row, col])
                     {
-                        line += "*";
+                        line += "■";
                     }
                     else
                     {
@@ -344,7 +346,8 @@ namespace tetris
                 {              
                     if (CurrentFigure[row, col])
                     {
-                        Write("*", row + 1 + CurrentFigureRow,col+ 1 + CurrentFigureCol);
+
+                        Write("■", row + 1 + CurrentFigureRow,col+ 1 + CurrentFigureCol);
                     }
                 }
             }
@@ -377,7 +380,7 @@ namespace tetris
             endLine += "╝";
             Console.Write(endLine);
 
-        }
+        } 
 
         static void Write(string text, int row, int col)
         {

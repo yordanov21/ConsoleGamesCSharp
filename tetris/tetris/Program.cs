@@ -301,18 +301,18 @@ namespace tetris
                 HighScore = Score;
             }
             Write("Level:", 1, TetrisCols + 3);
-            Write(Level.ToString(), 2, TetrisCols + 3);
-            Write("Score:", 4, TetrisCols + 3);
-            Write(Score.ToString(), 5, TetrisCols + 3);
-            Write("High Score:", 7, TetrisCols + 3);
-            Write(HighScore.ToString(), 8, TetrisCols + 3);
-            //Write("Frame:", 10, TetrisCols + 3);
-            //Write(Frame.ToString(), 11, TetrisCols + 3);
-            //Write("Position:", 13, TetrisCols + 3);
-            //Write($"{CurrentFigureCol}, {CurrentFigureCol}", 14, TetrisCols + 3);
-            Write("Keys:", 16, TetrisCols + 3);
-            Write("  ^  ", 17, TetrisCols + 3);
-            Write("< v >", 18, TetrisCols + 3);
+            Write(Level.ToString(), 3, TetrisCols + 3);
+            Write("Score:", 5, TetrisCols + 3);
+            Write(Score.ToString(), 7, TetrisCols + 3);
+            Write("High Score:", 9, TetrisCols + 3);
+            Write(HighScore.ToString(), 11, TetrisCols + 3);
+            //Write("Frame:", 13, TetrisCols + 3);
+            //Write(Frame.ToString(), 14, TetrisCols + 3);
+            //Write("Position:", 15, TetrisCols + 3);
+            //Write($"{CurrentFigureCol}, {CurrentFigureCol}", 16, TetrisCols + 3);
+            Write("Keys:", 17, TetrisCols + 3);
+            Write("  ^  ", 18, TetrisCols + 3);
+            Write("< v >", 19, TetrisCols + 3);
         }
 
         static void DrawTetrisField()

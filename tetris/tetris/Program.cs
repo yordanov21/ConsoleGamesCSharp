@@ -62,7 +62,7 @@ namespace tetris
         static int Score = 0;
         static int Frame = 0;
         static int Level = 1;
-        static string FigureSymbol = "@";        
+        static string FigureSymbol = "■";
         static int FrameToMoveFigure = 16;
         static bool[,] CurrentFigure = null;
         static int CurrentFigureRow = 0;
@@ -86,12 +86,12 @@ namespace tetris
             Console.WriteLine("");
             Console.WriteLine("Please select music: Y/N");
             Console.Write("Play music:");
-           string music = Console.ReadLine();
+            string music = Console.ReadLine();
             if (music == "Y")
             {
                 PlayGame = true;
             }
-            else 
+            else
             {
                 PlayGame = false;
             }
@@ -116,14 +116,12 @@ namespace tetris
             Console.BufferWidth = ConsoleCols;
             CurrentFigure = TetrisFigures[Random.Next(0, TetrisFigures.Count)];
             NextFigure = TetrisFigures[Random.Next(0, TetrisFigures.Count)];
-            //DrawBorder();
-            //DrawInfo();
+
             while (true)
             {
-
-
                 Frame++;
                 UpdateLevel();
+
                 // Read user input
                 if (Console.KeyAvailable)
                 {
@@ -137,42 +135,47 @@ namespace tetris
                         Write("║     Pause     ║", 7, 5);
                         Write("║               ║", 8, 5);
                         Write("╚═══════════════╝", 9, 5);
+                        //TODO music don't STOP after pause 
                         PlayGame = false;
                         Console.ReadKey();
                     }
+
                     if (key.Key == ConsoleKey.Spacebar && PauseMode == true)
                     {
                         PlayGame = true;
-                        //TODO music dont play after pause 
+                     
                         PlayConsoleMusic();
                         PauseMode = false;
                     }
+
                     if (key.Key == ConsoleKey.Escape)
-                    {
-                        //Environment.Exit(0);
-                        return; //bacause of Main()
+                    {                       
+                        return; 
                     }
 
                     if (key.Key == ConsoleKey.LeftArrow || key.Key == ConsoleKey.A)
                     {
-                        if (CurrentFigureCol >= 1)
+                       
+                        if (CurrentFigureCol >= 1 )
                         {
                             CurrentFigureCol--;
                         }
 
                     }
+
                     if (key.Key == ConsoleKey.RightArrow || key.Key == ConsoleKey.D)
-                    {
-                        if (CurrentFigureCol < TetrisCols - CurrentFigure.GetLength(1))
+                    {       
+                        if ((CurrentFigureCol < TetrisCols - CurrentFigure.GetLength(1)) )
                         {
                             CurrentFigureCol++;
                         }
-
                     }
+
                     if (key.Key == ConsoleKey.UpArrow || key.Key == ConsoleKey.W)
                     {
                         RotateCurrentFigure();
                     }
+
                     if (key.Key == ConsoleKey.DownArrow || key.Key == ConsoleKey.S)
                     {
                         Frame = 1;
@@ -180,7 +183,6 @@ namespace tetris
                         CurrentFigureRow++;
                     }
                 }
-
 
                 //Update the game state
                 if (Frame % (FrameToMoveFigure - Level) == 0)
@@ -191,10 +193,8 @@ namespace tetris
                 }
                 // user input
                 // change state
-
                 if (Collision(CurrentFigure))
                 {
-
                     AddCurrentFigureToTetrisField();
                     int lines = CheckForFullLines();
                     //add points to score
@@ -219,13 +219,9 @@ namespace tetris
                         Write("╚══════════════╝", 9, 5);
                         PlayGame = false;
                         PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\gameover.wav");
-                        //  var myPlayer = new SoundPlayer();
-                        //  myPlayer.SoundLocation = @"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\gameover.wav";
-                        // myPlayer.PlaySync();
-                        Thread.Sleep(100000);
+                        Thread.Sleep(1000000);
                         return;
                     }
-
                 }
 
                 //Redraw UI
@@ -233,7 +229,6 @@ namespace tetris
                 DrawInfo();
                 DrawTetrisField();
                 DrawCurrentFigure();
-
                 //wait 40 miliseconds
                 Thread.Sleep(40);
             }
@@ -252,7 +247,7 @@ namespace tetris
                 Level = 1;
             }
 
-            if (Score >=1000 && SongLevel==2)
+            if (Score >= 1000 && SongLevel == 2)
             {
                 Level = 2;
                 SongLevel++;
@@ -423,16 +418,17 @@ namespace tetris
 
         static bool Collision(bool[,] figure)
         {
+            //CHEK for right outsite border 
             if (CurrentFigureCol > TetrisCols - figure.GetLength(1))
             {
                 return true;
             }
-
+            //CHEK for down outsite border 
             if (CurrentFigureRow + figure.GetLength(0) == TetrisRows)
             {
                 return true;
             }
-
+            //CHEK FOR COLLISUM DOWN
             for (int row = 0; row < figure.GetLength(0); row++)
             {
                 for (int col = 0; col < figure.GetLength(1); col++)
@@ -443,8 +439,10 @@ namespace tetris
                     }
                 }
             }
+
             return false;
         }
+
         static void DrawInfo()
         {
             if (Score > HighScore)
@@ -488,7 +486,7 @@ namespace tetris
                         line += " ";
                     }
                 }
-                //+1 zaradi border-a 
+                //+1 for the border
                 Write(line, row + 1, 1);
             }
         }
@@ -508,6 +506,7 @@ namespace tetris
                 }
             }
         }
+
         static void DrawNextFigure()
         {
 
@@ -523,6 +522,7 @@ namespace tetris
                 }
             }
         }
+
         static void DrawBorder()
         {
             //always start drawing border from point (0,0);
@@ -563,9 +563,6 @@ namespace tetris
         {
             if (PauseMode == false)
             {
-               // var myPlayer = new SoundPlayer();
-               // myPlayer.SoundLocation = @"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\game.wav";
-               // myPlayer.PlaySync();
                 new Thread(() =>
                 {
                     if (PlayGame)
@@ -577,10 +574,9 @@ namespace tetris
                             gameMusic.PlaySync();
                         }
                     }
-                                
+
                 }).Start();
             }
-
         }
 
         static void PlayMusic(string songUrl)

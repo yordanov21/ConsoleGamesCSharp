@@ -5,15 +5,17 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Text;
 using System.Text.Encodings;
+using System.Media;
 
 namespace tetris
 {
     class Program
     {
+
         //Settings 
-        static int TetrisRows = 20;
+        static int TetrisRows = 21;
         static int TetrisCols = 10;
-        static int InfoCols = 12;
+        static int InfoCols = 25;
         static int ConsoleRows = 1 + TetrisRows + 1;
         static int ConsoleCols = 1 + TetrisCols + 1 + InfoCols + 1;
         static List<bool[,]> TetrisFigures = new List<bool[,]>()
@@ -60,17 +62,40 @@ namespace tetris
         static int Score = 0;
         static int Frame = 0;
         static int Level = 1;
+        static string FigureSymbol = "@";        
         static int FrameToMoveFigure = 16;
         static bool[,] CurrentFigure = null;
         static int CurrentFigureRow = 0;
         static int CurrentFigureCol = 0;
+        static bool[,] NextFigure = null;
+        static int NextFigureRow = 14;
+        static int NextFigureCol = TetrisCols + 3;
         static bool[,] TetrisField = new bool[TetrisRows, TetrisCols];
         static Random Random = new Random();
+        static bool PauseMode = false;
+        static bool PlayGame = true;
+        static int SongLevel = 2;
 
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
-            PlayMusic();
+            Console.OutputEncoding = Encoding.Unicode;
+            Console.WriteLine("Welcome to Tetris Console Game by y.yordanov21.");
+            Console.WriteLine("");
+            Console.WriteLine("All rights reserved!");
+            Console.WriteLine("");
+            Console.WriteLine("Please select music: Y/N");
+            Console.Write("Play music:");
+           string music = Console.ReadLine();
+            if (music == "Y")
+            {
+                PlayGame = true;
+            }
+            else 
+            {
+                PlayGame = false;
+            }
+            PlayConsoleMusic();
 
             if (File.Exists(ScoresFileName))
             {
@@ -82,7 +107,7 @@ namespace tetris
                 }
             }
 
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.Title = "Tetris V1.0 by y.yordanov21";
             Console.CursorVisible = false;
             Console.WindowHeight = ConsoleRows + 1;
@@ -90,16 +115,38 @@ namespace tetris
             Console.BufferHeight = ConsoleRows + 1;
             Console.BufferWidth = ConsoleCols;
             CurrentFigure = TetrisFigures[Random.Next(0, TetrisFigures.Count)];
+            NextFigure = TetrisFigures[Random.Next(0, TetrisFigures.Count)];
             //DrawBorder();
             //DrawInfo();
             while (true)
             {
+
+
                 Frame++;
                 UpdateLevel();
                 // Read user input
                 if (Console.KeyAvailable)
                 {
                     var key = Console.ReadKey();
+                    if (key.Key == ConsoleKey.Spacebar && PauseMode == false)
+                    {
+                        PauseMode = true;
+
+                        Write("╔═══════════════╗", 5, 5);
+                        Write("║               ║", 6, 5);
+                        Write("║     Pause     ║", 7, 5);
+                        Write("║               ║", 8, 5);
+                        Write("╚═══════════════╝", 9, 5);
+                        PlayGame = false;
+                        Console.ReadKey();
+                    }
+                    if (key.Key == ConsoleKey.Spacebar && PauseMode == true)
+                    {
+                        PlayGame = true;
+                        //TODO music dont play after pause 
+                        PlayConsoleMusic();
+                        PauseMode = false;
+                    }
                     if (key.Key == ConsoleKey.Escape)
                     {
                         //Environment.Exit(0);
@@ -122,7 +169,7 @@ namespace tetris
                         }
 
                     }
-                    if (key.Key == ConsoleKey.UpArrow || key.Key == ConsoleKey.W || key.Key == ConsoleKey.Spacebar)
+                    if (key.Key == ConsoleKey.UpArrow || key.Key == ConsoleKey.W)
                     {
                         RotateCurrentFigure();
                     }
@@ -131,7 +178,6 @@ namespace tetris
                         Frame = 1;
                         Score += Level;
                         CurrentFigureRow++;
-
                     }
                 }
 
@@ -145,13 +191,15 @@ namespace tetris
                 }
                 // user input
                 // change state
+
                 if (Collision(CurrentFigure))
                 {
+
                     AddCurrentFigureToTetrisField();
                     int lines = CheckForFullLines();
                     //add points to score
                     Score += ScorePerLines[lines] * Level;
-                    CurrentFigure = TetrisFigures[Random.Next(0, TetrisFigures.Count)];
+                    //CurrentFigure = NextFigure;
                     CurrentFigureCol = 0;
                     CurrentFigureRow = 0;
 
@@ -169,6 +217,11 @@ namespace tetris
                         Write("║     over!    ║", 7, 5);
                         Write($"║      {scoreAsString} ║", 8, 5);
                         Write("╚══════════════╝", 9, 5);
+                        PlayGame = false;
+                        PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\gameover.wav");
+                        //  var myPlayer = new SoundPlayer();
+                        //  myPlayer.SoundLocation = @"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\gameover.wav";
+                        // myPlayer.PlaySync();
                         Thread.Sleep(100000);
                         return;
                     }
@@ -186,21 +239,110 @@ namespace tetris
             }
         }
 
+        private static bool[,] GetNextFigure()
+        {
+            NextFigure = TetrisFigures[Random.Next(0, TetrisFigures.Count)];
+            return NextFigure;
+        }
+
         private static void UpdateLevel()
         {
             if (Score <= 0)
             {
                 Level = 1;
             }
-            Level = (int)Math.Log10(Score) - 1;
-            if (Level < 1)
+
+            if (Score >=1000 && SongLevel==2)
             {
-                Level = 1;
+                Level = 2;
+                SongLevel++;
+                new Thread(() =>
+                 {
+                     PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
+                 }).Start();
             }
-            if (Level > 10)
+            else if (Score == 5000 && SongLevel == 3)
+            {
+                Level = 3;
+                SongLevel++;
+                new Thread(() =>
+                {
+                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
+                }).Start();
+            }
+            else if (Score == 10000 && SongLevel == 4)
+            {
+                Level = 4;
+                SongLevel++;
+                new Thread(() =>
+                {
+                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
+                }).Start();
+            }
+            else if (Score == 20000 && SongLevel == 5)
+            {
+                Level = 5;
+                SongLevel++;
+                new Thread(() =>
+                {
+                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
+                }).Start();
+            }
+            else if (Score == 50000 && SongLevel == 6)
+            {
+                Level = 6;
+                SongLevel++;
+                new Thread(() =>
+                {
+                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
+                }).Start();
+            }
+            else if (Score == 100000 && SongLevel == 7)
+            {
+                Level = 7;
+                SongLevel++;
+                new Thread(() =>
+                {
+                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
+                }).Start();
+            }
+            else if (Score == 250000 && SongLevel == 8)
+            {
+                Level = 8;
+                SongLevel++;
+                new Thread(() =>
+                {
+                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
+                }).Start();
+            }
+            else if (Score == 500000 && SongLevel == 9)
+            {
+                Level = 9;
+                SongLevel++;
+                new Thread(() =>
+                {
+                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
+                }).Start();
+            }
+            else if (Score == 1000000 && SongLevel == 10)
             {
                 Level = 10;
+                SongLevel++;
+                new Thread(() =>
+                {
+                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
+                }).Start();
             }
+            //Level = (int)Math.Log10(Score) - 1;
+
+            //if (Level < 1)
+            //{
+            //    Level = 1;
+            //}
+            //if (Level > 10)
+            //{
+            //    Level = 10;
+            //}
 
         }
 
@@ -249,8 +391,15 @@ namespace tetris
                     }
 
                     lines++;
-
                 }
+            }
+            if (lines > 0)
+            {
+                new Thread(() =>
+                {
+                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\clear.wav");
+                }).Start();
+
             }
             return lines;
         }
@@ -267,6 +416,9 @@ namespace tetris
                     }
                 }
             }
+
+            CurrentFigure = NextFigure;
+            GetNextFigure();
         }
 
         static bool Collision(bool[,] figure)
@@ -275,7 +427,6 @@ namespace tetris
             {
                 return true;
             }
-
 
             if (CurrentFigureRow + figure.GetLength(0) == TetrisRows)
             {
@@ -306,13 +457,19 @@ namespace tetris
             Write(Score.ToString(), 7, TetrisCols + 3);
             Write("High Score:", 9, TetrisCols + 3);
             Write(HighScore.ToString(), 11, TetrisCols + 3);
+            Write("Next figure:", 13, TetrisCols + 3);
+
+            DrawNextFigure();
+
             //Write("Frame:", 13, TetrisCols + 3);
             //Write(Frame.ToString(), 14, TetrisCols + 3);
             //Write("Position:", 15, TetrisCols + 3);
             //Write($"{CurrentFigureCol}, {CurrentFigureCol}", 16, TetrisCols + 3);
             Write("Keys:", 17, TetrisCols + 3);
-            Write("  ^  ", 18, TetrisCols + 3);
-            Write("< v >", 19, TetrisCols + 3);
+            Write("  ^  ", 19, TetrisCols + 3);
+            Write("< v >", 20, TetrisCols + 3);
+            Write("Pause:", 17, TetrisCols + 15);
+            Write("space", 19, TetrisCols + 15);
         }
 
         static void DrawTetrisField()
@@ -324,7 +481,7 @@ namespace tetris
                 {
                     if (TetrisField[row, col])
                     {
-                        line += "■";
+                        line += $"{FigureSymbol}";
                     }
                     else
                     {
@@ -341,36 +498,49 @@ namespace tetris
 
             for (int row = 0; row < CurrentFigure.GetLength(0); row++)
             {
-          
+
                 for (int col = 0; col < CurrentFigure.GetLength(1); col++)
-                {              
+                {
                     if (CurrentFigure[row, col])
                     {
-
-                        Write("■", row + 1 + CurrentFigureRow,col+ 1 + CurrentFigureCol);
+                        Write($"{FigureSymbol}", row + 1 + CurrentFigureRow, col + 1 + CurrentFigureCol);
                     }
                 }
             }
         }
+        static void DrawNextFigure()
+        {
 
+            for (int row = 0; row < NextFigure.GetLength(0); row++)
+            {
+
+                for (int col = 0; col < NextFigure.GetLength(1); col++)
+                {
+                    if (NextFigure[row, col])
+                    {
+                        Write($"{FigureSymbol}", row + 1 + NextFigureRow, col + 1 + NextFigureCol);
+                    }
+                }
+            }
+        }
         static void DrawBorder()
         {
             //always start drawing border from point (0,0);
             Console.SetCursorPosition(0, 0);
 
             //drawing border
+
             string firstLine = "╔";
             firstLine += new string('═', TetrisCols);
             firstLine += "╦";
             firstLine += new string('═', InfoCols);
             firstLine += "╗";
-            Console.Write(firstLine);
 
+            string middleLine = "";
             for (int i = 0; i < TetrisRows; i++)
             {
-                string middleLine = "║";
-                middleLine += new string(' ', TetrisCols) + "║" + new string(' ', InfoCols) + "║";
-                Console.Write(middleLine);
+                middleLine += "║";
+                middleLine += new string(' ', TetrisCols) + "║" + new string(' ', InfoCols) + "║" + "\n";
             }
 
             string endLine = "╚";
@@ -378,9 +548,10 @@ namespace tetris
             endLine += "╩";
             endLine += new string('═', InfoCols);
             endLine += "╝";
-            Console.Write(endLine);
 
-        } 
+            string borderFrame = firstLine + "\n" + middleLine + endLine;
+            Console.Write(borderFrame);
+        }
 
         static void Write(string text, int row, int col)
         {
@@ -388,128 +559,35 @@ namespace tetris
             Console.Write(text);
         }
 
-        private static void PlayMusic()
+        private static void PlayConsoleMusic()
         {
-            new Thread(() => {
-                while (true)
+            if (PauseMode == false)
+            {
+               // var myPlayer = new SoundPlayer();
+               // myPlayer.SoundLocation = @"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\game.wav";
+               // myPlayer.PlaySync();
+                new Thread(() =>
                 {
-                    const int soundLenght = 100;
-                    Console.Beep(1320, soundLenght * 4);
-                    Console.Beep(990, soundLenght * 2);
-                    Console.Beep(1056, soundLenght * 2);
-                    Console.Beep(1188, soundLenght * 2);
-                    Console.Beep(1320, soundLenght);
-                    Console.Beep(1188, soundLenght);
-                    Console.Beep(1056, soundLenght * 2);
-                    Console.Beep(990, soundLenght * 2);
-                    Console.Beep(880, soundLenght * 4);
-                    Console.Beep(880, soundLenght * 2);
-                    Console.Beep(1056, soundLenght * 2);
-                    Console.Beep(1320, soundLenght * 4);
-                    Console.Beep(1188, soundLenght * 2);
-                    Console.Beep(1056, soundLenght * 2);
-                    Console.Beep(990, soundLenght * 6);
-                    Console.Beep(1056, soundLenght * 2);
-                    Console.Beep(1188, soundLenght * 4);
-                    Console.Beep(1320, soundLenght * 4);
-                    Console.Beep(1056, soundLenght * 4);
-                    Console.Beep(880, soundLenght * 4);
-                    Console.Beep(880, soundLenght * 4);
-                    Thread.Sleep(soundLenght * 2);
-                    Console.Beep(1188, soundLenght * 4);
-                    Console.Beep(1408, soundLenght * 2);
-                    Console.Beep(1760, soundLenght * 4);
-                    Console.Beep(1584, soundLenght * 2);
-                    Console.Beep(1408, soundLenght * 2);
-                    Console.Beep(1320, soundLenght * 6);
-                    Console.Beep(1056, soundLenght * 2);
-                    Console.Beep(1320, soundLenght * 4);
-                    Console.Beep(1188, soundLenght * 2);
-                    Console.Beep(1056, soundLenght * 2);
-                    Console.Beep(990, soundLenght * 4);
-                    Console.Beep(990, soundLenght * 2);
-                    Console.Beep(1056, soundLenght * 2);
-                    Console.Beep(1188, soundLenght * 4);
-                    Console.Beep(1320, soundLenght * 4);
-                    Console.Beep(1056, soundLenght * 4);
-                    Console.Beep(880, soundLenght * 4);
-                    Console.Beep(880, soundLenght * 4);
-                    Thread.Sleep(soundLenght * 4);
-                    Console.Beep(1320, soundLenght * 4);
-                    Console.Beep(990, soundLenght * 2);
-                    Console.Beep(1056, soundLenght * 2);
-                    Console.Beep(1188, soundLenght * 2);
-                    Console.Beep(1320, soundLenght);
-                    Console.Beep(1188, soundLenght);
-                    Console.Beep(1056, soundLenght * 2);
-                    Console.Beep(990, soundLenght * 2);
-                    Console.Beep(880, soundLenght * 4);
-                    Console.Beep(880, soundLenght * 2);
-                    Console.Beep(1056, soundLenght * 2);
-                    Console.Beep(1320, soundLenght * 4);
-                    Console.Beep(1188, soundLenght * 2);
-                    Console.Beep(1056, soundLenght * 2);
-                    Console.Beep(990, soundLenght * 6);
-                    Console.Beep(1056, soundLenght * 2);
-                    Console.Beep(1188, soundLenght * 4);
-                    Console.Beep(1320, soundLenght * 4);
-                    Console.Beep(1056, soundLenght * 4);
-                    Console.Beep(880, soundLenght * 4);
-                    Console.Beep(880, soundLenght * 4);
-                    Thread.Sleep(soundLenght * 2);
-                    Console.Beep(1188, soundLenght * 4);
-                    Console.Beep(1408, soundLenght * 2);
-                    Console.Beep(1760, soundLenght * 4);
-                    Console.Beep(1584, soundLenght * 2);
-                    Console.Beep(1408, soundLenght * 2);
-                    Console.Beep(1320, soundLenght * 6);
-                    Console.Beep(1056, soundLenght * 2);
-                    Console.Beep(1320, soundLenght * 4);
-                    Console.Beep(1188, soundLenght * 2);
-                    Console.Beep(1056, soundLenght * 2);
-                    Console.Beep(990, soundLenght * 4);
-                    Console.Beep(990, soundLenght * 2);
-                    Console.Beep(1056, soundLenght * 2);
-                    Console.Beep(1188, soundLenght * 4);
-                    Console.Beep(1320, soundLenght * 4);
-                    Console.Beep(1056, soundLenght * 4);
-                    Console.Beep(880, soundLenght * 4);
-                    Console.Beep(880, soundLenght * 4);
-                    Thread.Sleep(soundLenght * 4);
-                    Console.Beep(660, soundLenght * 8);
-                    Console.Beep(528, soundLenght * 8);
-                    Console.Beep(594, soundLenght * 8);
-                    Console.Beep(495, soundLenght * 8);
-                    Console.Beep(528, soundLenght * 8);
-                    Console.Beep(440, soundLenght * 8);
-                    Console.Beep(419, soundLenght * 8);
-                    Console.Beep(495, soundLenght * 8);
-                    Console.Beep(660, soundLenght * 8);
-                    Console.Beep(528, soundLenght * 8);
-                    Console.Beep(594, soundLenght * 8);
-                    Console.Beep(495, soundLenght * 8);
-                    Console.Beep(528, soundLenght * 4);
-                    Console.Beep(660, soundLenght * 4);
-                    Console.Beep(880, soundLenght * 8);
-                    Console.Beep(838, soundLenght * 16);
-                    Console.Beep(660, soundLenght * 8);
-                    Console.Beep(528, soundLenght * 8);
-                    Console.Beep(594, soundLenght * 8);
-                    Console.Beep(495, soundLenght * 8);
-                    Console.Beep(528, soundLenght * 8);
-                    Console.Beep(440, soundLenght * 8);
-                    Console.Beep(419, soundLenght * 8);
-                    Console.Beep(495, soundLenght * 8);
-                    Console.Beep(660, soundLenght * 8);
-                    Console.Beep(528, soundLenght * 8);
-                    Console.Beep(594, soundLenght * 8);
-                    Console.Beep(495, soundLenght * 8);
-                    Console.Beep(528, soundLenght * 4);
-                    Console.Beep(660, soundLenght * 4);
-                    Console.Beep(880, soundLenght * 8);
-                    Console.Beep(838, soundLenght * 16);
-                }
-            }).Start();
+                    if (PlayGame)
+                    {
+                        var gameMusic = new SoundPlayer();
+                        while (PlayGame)
+                        {
+                            gameMusic.SoundLocation = @"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\tetris-gameboy-02 (1).wav";
+                            gameMusic.PlaySync();
+                        }
+                    }
+                                
+                }).Start();
+            }
+
+        }
+
+        static void PlayMusic(string songUrl)
+        {
+            var myPlayer = new SoundPlayer();
+            myPlayer.SoundLocation = songUrl;
+            myPlayer.Play();
         }
     }
 }

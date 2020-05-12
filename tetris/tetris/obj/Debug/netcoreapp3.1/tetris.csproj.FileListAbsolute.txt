@@ -20,3 +20,11 @@ C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tet
 C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\obj\Debug\netcoreapp3.1\tetris.AssemblyInfo.cs
 C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\obj\Debug\netcoreapp3.1\tetris.dll
 C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\obj\Debug\netcoreapp3.1\tetris.pdb
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\bin\Debug\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\bin\Debug\netcoreapp3.1\System.Drawing.Common.dll
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\bin\Debug\netcoreapp3.1\System.Windows.Extensions.dll
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\tetris\tetris\obj\Debug\netcoreapp3.1\tetris.csproj.CopyComplete

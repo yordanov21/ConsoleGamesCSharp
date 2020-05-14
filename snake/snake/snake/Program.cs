@@ -4,6 +4,7 @@ using System.Threading;
 using System.Media;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Text;
 
 namespace snake
 {
@@ -12,7 +13,7 @@ namespace snake
     {
         //Settings 
         static int SnakeFieldRows = 20;
-        static int SnakeFieldCols = 20;
+        static int SnakeFieldCols = 30;
         static int InfoCols = 15;
         static int ConsoleRows = 1 + SnakeFieldRows + 1;
         static int ConsoleCols = 1 + SnakeFieldCols + 1 + InfoCols + 1;       
@@ -24,16 +25,19 @@ namespace snake
         static bool DirectionLeft = true;
         static bool DirectionRight = false;
 
-        static bool OpposideDirectionDown = true;
+        static bool OpposideDirectionDown =true;
         static bool OpposideDirectionUp = true;
         static bool OpposideDirectionLeft = true;
-        static bool OpposideDirectionRight = false;
-
+        static bool OpposideDirectionRight =false;
         
         static int HighScore = 0;
         static int Score = 0;    
         static int Level = 1;
-        static string FigureSymbol = "*";
+        static string FigureSymbol = "o";
+        static string SnakeHeadFigureSymbol = "O";
+        static string SnakeHeadFigureSymbolOpstacle = "@";
+        //◍ ■ ☯ ⚛ ⚙
+        static string OpstacleSymbol = "x";
         //static SnakeItems[,] SnakeFigure = new SnakeItems[SnakeFieldRows, SnakeFieldCols];
 
         static int SnakeFigureRow = 1;
@@ -42,10 +46,10 @@ namespace snake
         static List<OpstacleItem> SnakeObstaclesList = new List<OpstacleItem>();
         static Random Random = new Random();
         static bool PauseMode = false;
-        static bool PlayGame = true;
+        static bool MusicPlayer = true;
         static int NextLevel = 2;
-        static int SleepSec = 600;
-        static int SleepSecLevel = 50;
+        static int SleepSec = 350;
+        static int SleepSecLevel = SleepSec/10;
         static OpstacleItem CurrentOpstacle = null;
         static List<SnakeItem> SnakeEmenents = new List<SnakeItem>()
         {
@@ -57,6 +61,9 @@ namespace snake
         
         static void Main(string[] args)
         {
+            Console.OutputEncoding = Encoding.UTF8;
+            Console.OutputEncoding = Encoding.Unicode;
+
             if (File.Exists(ScoresFileName))
             {
                 var allScores = File.ReadAllLines(ScoresFileName);
@@ -76,6 +83,7 @@ namespace snake
                     id++;
                 }
             }
+
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.Title = "Snake V1.0 by y.yordanov21";
             Console.CursorVisible = false;
@@ -84,16 +92,29 @@ namespace snake
             Console.BufferHeight = ConsoleRows;
             Console.BufferWidth = ConsoleCols;
 
+            SoundPlayer player = new SoundPlayer();
+            player.SoundLocation = @"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\tetris-gameboy-02 (1).wav";
+            player.Play();
+
             CurrentOpstacle = SnakeObstaclesList[SnakeObstaclesList.Count/2+2];
             while (true)
-            {
-               
+            {             
                 UpdateLevel();
-
                 // Read user input
                 if (Console.KeyAvailable)
                 {
                     var key = Console.ReadKey();
+
+                    if (key.Key == ConsoleKey.P && MusicPlayer==true)
+                    {
+                        player.Stop();
+                        MusicPlayer = false;                    
+                    }
+                    if (key.Key == ConsoleKey.O && MusicPlayer == false)
+                    {
+                        player.Play();
+                        MusicPlayer = true;
+                    }
                     if (key.Key == ConsoleKey.Spacebar && PauseMode == false)
                     {
                         PauseMode = true;
@@ -103,15 +124,11 @@ namespace snake
                         Write("║     Pause     ║", 7, 5);
                         Write("║               ║", 8, 5);
                         Write("╚═══════════════╝", 9, 5);
-                        //TODO music don't STOP after pause 
-                        PlayGame = false;
                         Console.ReadKey();
                     }
 
                     if (key.Key == ConsoleKey.Spacebar && PauseMode == true)
                     {
-                        PlayGame = true;
-
                         PauseMode = false;
                     }
 
@@ -120,28 +137,40 @@ namespace snake
                         return;
                     }
 
-                    if (key.Key == ConsoleKey.LeftArrow || key.Key == ConsoleKey.A)
+                    if ((key.Key == ConsoleKey.LeftArrow || key.Key == ConsoleKey.A)&&OpposideDirectionLeft)
                     {
                         ChangeDirection("DirectionLeft");
-                    
+                        OpposideDirectionLeft = true;
+                        OpposideDirectionRight = false;
+                        OpposideDirectionUp = true;
+                        OpposideDirectionDown = true;
                     }
 
-                    if (key.Key == ConsoleKey.RightArrow || key.Key == ConsoleKey.D)
+                    if ((key.Key == ConsoleKey.RightArrow || key.Key == ConsoleKey.D)&& OpposideDirectionRight)
                     {
-                        ChangeDirection("DirectionRight");
-                      
+                        ChangeDirection("DirectionRight");                     
+                        OpposideDirectionRight = true;
+                        OpposideDirectionLeft = false;
+                        OpposideDirectionUp = true;
+                        OpposideDirectionDown = true;
                     }
 
-                    if (key.Key == ConsoleKey.UpArrow || key.Key == ConsoleKey.W)
+                    if ((key.Key == ConsoleKey.UpArrow || key.Key == ConsoleKey.W)&&OpposideDirectionUp)
                     {
                         ChangeDirection("DirectionUp");
-                      
+                        OpposideDirectionUp = true;
+                        OpposideDirectionDown = false;
+                        OpposideDirectionLeft = true;
+                        OpposideDirectionRight = true;
                     }
 
-                    if (key.Key == ConsoleKey.DownArrow || key.Key == ConsoleKey.S)
+                    if ((key.Key == ConsoleKey.DownArrow || key.Key == ConsoleKey.S)&&OpposideDirectionDown)
                     {
-                        ChangeDirection("DirectionDown");
-                      
+                        ChangeDirection("DirectionDown");                      
+                        OpposideDirectionDown = true;
+                        OpposideDirectionUp = false;
+                        OpposideDirectionLeft = true;
+                        OpposideDirectionRight = true;
                     }
                 }
 
@@ -162,7 +191,6 @@ namespace snake
                     {
                         SnakeFigureCol++;
                     }
-                    Score++;
                 
                 //Draw Game Units
                 DrawBorder();
@@ -246,8 +274,7 @@ namespace snake
                 else
                 {
                     SnakeEmenents[0].colPossition++;
-                }
-              
+                }             
             }
            
             CheckForGameOver();
@@ -263,12 +290,41 @@ namespace snake
             var lastSnakeEmenentCol = SnakeEmenents[SnakeEmenents.Count-1].colPossition;
             if (SnakeEmenents[0].rowPossition == currentOpstacleRow && SnakeEmenents[0].colPossition == currentOpstacleCol)
             {
-                Score += 50 * Level;
-                CurrentOpstacle = SnakeObstaclesList[Random.Next(0, SnakeObstaclesList.Count)];
+                bool validOpstacle = true;
+               
+                Score += 10 * Level;
+                while (validOpstacle)
+                {
+                    bool checkedSnake = true;
+                    CurrentOpstacle = SnakeObstaclesList[Random.Next(0, SnakeObstaclesList.Count)];
+                    for (int i = 0; i < SnakeEmenents.Count; i++)
+                    {
+                        if (CurrentOpstacle.rowPossition == SnakeEmenents[i].rowPossition
+                            && CurrentOpstacle.colPossition == SnakeEmenents[i].colPossition)
+                        {
+                            checkedSnake = false;
+                        }                      
+                    }
+                    if (checkedSnake)
+                    {
+                        validOpstacle = false;
+                    }
+
+                }
+
+                // DrawOpstaclePassThroughSnake();
+                Write($"{SnakeHeadFigureSymbolOpstacle}", SnakeEmenents[0].rowPossition, SnakeEmenents[0].colPossition);
+                new Thread(() =>
+                {
+                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\selection.wav");
+                }).Start();
+                Thread.Sleep(100);
+                Write($"{SnakeHeadFigureSymbol}", SnakeEmenents[0].rowPossition, SnakeEmenents[0].colPossition);
                 SnakeEmenents.Add(new SnakeItem { Id = lastSnakeEmenentId, rowPossition = lastSnakeEmenentRow, colPossition = lastSnakeEmenentCol });
             }
 
         }
+
         static void CheckForGameOver()
         {
             var currentSnakeHeadRowPossition = SnakeEmenents[0].rowPossition;
@@ -289,14 +345,12 @@ namespace snake
                     Write("║     over!    ║", 7, 5);
                     Write($"║      {scoreAsString} ║", 8, 5);
                     Write("╚══════════════╝", 9, 5);
-                    PlayGame = false;
                     PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\gameover.wav");
                     Thread.Sleep(1000000);
                     return;
                 }
             }
         }
-
         static void DrawBorder()
         {
             //always start drawing border from point (0,0);
@@ -304,7 +358,7 @@ namespace snake
 
             //drawing border
             string firstLine = "╔";
-            firstLine += new string('═', SnakeFieldRows);
+            firstLine += new string('═', SnakeFieldCols);
             firstLine += "╦";
             firstLine += new string('═', InfoCols);
             firstLine += "╗";
@@ -323,7 +377,7 @@ namespace snake
             endLine += "╝";
 
             string borderFrame = firstLine + "\n" + middleLine + endLine;
-            Console.Write(borderFrame);
+            Write(borderFrame, 0, 0);
         }
         static void DrawInfo()
         {
@@ -336,33 +390,29 @@ namespace snake
             Write("Score:", 5, SnakeFieldCols + 3);
             Write(Score.ToString(), 7, SnakeFieldCols + 3);
             Write("High Score:", 9, SnakeFieldCols + 3);
-            Write(HighScore.ToString(), 11, SnakeFieldCols + 3);
-           
-            //Write("Frame:", 13, SnakeFieldCols + 3);
-            //Write(Frame.ToString(), 14, SnakeFieldCols + 3);
-            //Write("Position:", 15, SnakeFieldCols + 3);
-            //Write($"{CurrentFigureCol}, {CurrentFigureCol}", 16, SnakeFieldCols + 3);
-            Write("Keys:", 15, SnakeFieldCols + 3);
-            Write("  ^  ", 16, SnakeFieldCols + 3);
-            Write("<   >", 17, SnakeFieldCols + 3);
-            Write("  v  ", 18, SnakeFieldCols + 3);
-            Write("Pause: space", 20, SnakeFieldCols +3);
+            Write(HighScore.ToString(), 11, SnakeFieldCols + 3);        
+            Write("Keys:", 13, SnakeFieldCols + 3);
+            Write("  ^  ", 14, SnakeFieldCols + 3);
+            Write("<   >", 15, SnakeFieldCols + 3);
+            Write("  v  ", 16, SnakeFieldCols + 3);
+            Write("Pause: space", 17, SnakeFieldCols +3);
+            Write($"Music: P -{MusicPlayer}", 19, SnakeFieldCols +3);
             
         }
         static void DrawSnake()
         {
-
-            for (int i = 0; i < SnakeEmenents.Count; i++)
+            Write($"{SnakeHeadFigureSymbol}", SnakeEmenents[0].rowPossition, SnakeEmenents[0].colPossition);
+            for (int i = 1; i < SnakeEmenents.Count; i++)
             {
                 Write($"{FigureSymbol}", SnakeEmenents[i].rowPossition, SnakeEmenents[i].colPossition);
             }
         }
         static void DrawOpstacle()
         {
-
             for (int i = 0; i < SnakeEmenents.Count; i++)
             {
-                Write($"{FigureSymbol}", CurrentOpstacle.rowPossition, CurrentOpstacle.colPossition);
+               
+                Write($"{OpstacleSymbol}", CurrentOpstacle.rowPossition, CurrentOpstacle.colPossition, ConsoleColor.Yellow);
             }
         }
         static void ChangeDirection(string direction)
@@ -396,13 +446,12 @@ namespace snake
                 DirectionRight = true;
             }
         }
-
-        static void Write(string text, int row, int col)
+        static void Write(string text, int row, int col,ConsoleColor color= ConsoleColor.Gray)
         {
+            Console.ForegroundColor = color;
             Console.SetCursorPosition(col, row);
             Console.Write(text);
         }
-
         private static void UpdateLevel()
         {
             if (Score <= 0)
@@ -410,7 +459,7 @@ namespace snake
                 Level = 1;
             }
 
-            if (Score >= 500 && NextLevel == 2)
+            if (Score >= 50 && NextLevel == 2)
             {
                 Level = 2;
                 SleepSec -=SleepSecLevel;
@@ -420,7 +469,7 @@ namespace snake
                     PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
                 }).Start();
             }
-            else if (Score >= 1000 && NextLevel == 3)
+            else if (Score >= 200 && NextLevel == 3)
             {
                 Level = 3;
                 SleepSec -= SleepSecLevel;
@@ -430,7 +479,7 @@ namespace snake
                     PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
                 }).Start();
             }
-            else if (Score >= 5000 && NextLevel == 4)
+            else if (Score >= 500 && NextLevel == 4)
             {
                 Level = 4;
                 SleepSec -= SleepSecLevel;
@@ -440,7 +489,7 @@ namespace snake
                     PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
                 }).Start();
             }
-            else if (Score >= 10000 && NextLevel == 5)
+            else if (Score >= 1000 && NextLevel == 5)
             {
                 Level = 5;
                 SleepSec -= SleepSecLevel;
@@ -450,7 +499,7 @@ namespace snake
                     PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
                 }).Start();
             }
-            else if (Score >= 20000 && NextLevel == 6)
+            else if (Score >= 2500 && NextLevel == 6)
             {
                 Level = 6;
                 SleepSec -= SleepSecLevel;
@@ -460,7 +509,7 @@ namespace snake
                     PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
                 }).Start();
             }
-            else if (Score == 50000 && NextLevel == 7)
+            else if (Score == 5000 && NextLevel == 7)
             {
                 Level = 7;
                 SleepSec -= SleepSecLevel;
@@ -470,7 +519,7 @@ namespace snake
                     PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
                 }).Start();
             }
-            else if (Score >= 100000 && NextLevel == 8)
+            else if (Score >= 10000 && NextLevel == 8)
             {
                 Level = 8;
                 SleepSec -= SleepSecLevel;
@@ -480,7 +529,7 @@ namespace snake
                     PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
                 }).Start();
             }
-            else if (Score >= 250000 && NextLevel == 9)
+            else if (Score >= 20000 && NextLevel == 9)
             {
                 Level = 9;
                 SleepSec -= SleepSecLevel;
@@ -490,7 +539,7 @@ namespace snake
                     PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
                 }).Start();
             }
-            else if (Score >= 500000 && NextLevel == 10)
+            else if (Score >= 50000 && NextLevel == 10)
             {
                 Level = 10;
                 SleepSec -= SleepSecLevel;
@@ -506,6 +555,15 @@ namespace snake
             var myPlayer = new SoundPlayer();
             myPlayer.SoundLocation = songUrl;
             myPlayer.Play();
+        }
+        static void DrawOpstaclePassThroughSnake()
+        {
+            for (int i = 1; i < SnakeEmenents.Count; i++)
+            {
+                Write($"{OpstacleSymbol}", SnakeEmenents[i].rowPossition, SnakeEmenents[i].colPossition);
+                Thread.Sleep(1);
+                Write($"{FigureSymbol}", SnakeEmenents[i].rowPossition, SnakeEmenents[i].colPossition);
+            }
         }
     }
     public class SnakeItem

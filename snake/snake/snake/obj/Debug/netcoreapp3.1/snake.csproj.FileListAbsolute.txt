@@ -17,3 +17,5 @@ C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\sna
 C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\snake\snake\snake\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
 C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\snake\snake\snake\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
 C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\snake\snake\snake\obj\Debug\netcoreapp3.1\snake.csproj.CopyComplete
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\snake\snake\snake\obj\Debug\netcoreapp3.1\snake.csproj.CoreCompileInputs.cache
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\snake\snake\snake\obj\Debug\netcoreapp3.1\snake.genruntimeconfig.cache

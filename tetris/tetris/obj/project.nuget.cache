@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "HcD80ISY5Z7vl85CCSW0/lcHj2epB8Unsty3qnhm4dC3oK5MeCc1ZJBq5/2VCH+YZOtmpd4uNO6viJ5Fal/PCg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\yyord\\OneDrive\\Desktop\\My projects\\Console_Games\\ConsoleGamesCSharp\\tetris\\tetris\\tetris.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\yyord\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
+    "C:\\Users\\yyord\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
+    "C:\\Users\\yyord\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
+    "C:\\Users\\yyord\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512"
+  ],
+  "logs": []
+}

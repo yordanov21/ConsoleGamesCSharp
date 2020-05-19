@@ -143,20 +143,20 @@ namespace tetris
                     if (key.Key == ConsoleKey.Spacebar && PauseMode == true)
                     {
                         PlayGame = true;
-                     
+
                         PlayConsoleMusic();
                         PauseMode = false;
                     }
 
                     if (key.Key == ConsoleKey.Escape)
-                    {                       
-                        return; 
+                    {
+                        return;
                     }
 
                     if (key.Key == ConsoleKey.LeftArrow || key.Key == ConsoleKey.A)
                     {
-                       
-                        if (CurrentFigureCol >= 1 )
+
+                        if (CurrentFigureCol >= 1)
                         {
                             CurrentFigureCol--;
                         }
@@ -164,8 +164,8 @@ namespace tetris
                     }
 
                     if (key.Key == ConsoleKey.RightArrow || key.Key == ConsoleKey.D)
-                    {       
-                        if ((CurrentFigureCol < TetrisCols - CurrentFigure.GetLength(1)) )
+                    {
+                        if ((CurrentFigureCol < TetrisCols - CurrentFigure.GetLength(1)))
                         {
                             CurrentFigureCol++;
                         }
@@ -449,6 +449,7 @@ namespace tetris
             {
                 HighScore = Score;
             }
+   
             Write("Level:", 1, TetrisCols + 3);
             Write(Level.ToString(), 3, TetrisCols + 3);
             Write("Score:", 5, TetrisCols + 3);
@@ -463,15 +464,16 @@ namespace tetris
             //Write(Frame.ToString(), 14, TetrisCols + 3);
             //Write("Position:", 15, TetrisCols + 3);
             //Write($"{CurrentFigureCol}, {CurrentFigureCol}", 16, TetrisCols + 3);
-            Write("Keys:", 17, TetrisCols + 3);
+            Write("Keys:", 18, TetrisCols + 3);
             Write("  ^  ", 19, TetrisCols + 3);
             Write("< v >", 20, TetrisCols + 3);
-            Write("Pause:", 17, TetrisCols + 15);
-            Write("space", 19, TetrisCols + 15);
+            Write("Pause:", 18, TetrisCols + 15);
+            Write("space", 20, TetrisCols + 15);
         }
 
         static void DrawTetrisField()
         {
+
             for (int row = 0; row < TetrisField.GetLength(0); row++)
             {
                 string line = "";

@@ -37,7 +37,7 @@ namespace snake
         static readonly string FigureSymbol = "o";
         static readonly string SnakeHeadFigureSymbol = "O";
         static readonly string SnakeHeadFigureSymbolOpstacle = "@"; 
-        static string OpstacleSymbol = "x";  
+        static string OpstacleSymbol = "ψ";  
         //start snake possition
         static int SnakeFigureRow = 1;
         static int SnakeFigureCol = 12;
@@ -96,7 +96,7 @@ namespace snake
            
             if (MusicPlayer)
             {
-                player.SoundLocation = @"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\tetris-gameboy-02 (1).wav";
+                player.SoundLocation = @"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\01 - Super Mario Bros.wav";
                 player.PlayLooping();
             }
 
@@ -130,7 +130,10 @@ namespace snake
                         Write("╚═══════════════╝", SnakeFieldRows / 2 + 3, SnakeFieldCols / 2 - 7);
                         player.Stop();
                         Console.ReadKey();
-                        player.PlayLooping();
+                        if (MusicPlayer)
+                        {
+                            player.PlayLooping();
+                        }                       
                     }
 
                     if (key.Key == ConsoleKey.Spacebar && PauseMode == true)

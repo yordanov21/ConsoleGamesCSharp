@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "EbZY4Ji5s1bD4UnPPLxX90yO1dO5LUklQC/jARDfxxCCUaUhIuTkzf850rsiDk/1w+uqoket7Yz3jKWnKZ/Q7w==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\yyord\\OneDrive\\Desktop\\My projects\\Console_Games\\ConsoleGamesCSharp\\snake\\snake\\snake.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\yyord\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
+    "C:\\Users\\yyord\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
+    "C:\\Users\\yyord\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
+    "C:\\Users\\yyord\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512"
+  ],
+  "logs": []
+}

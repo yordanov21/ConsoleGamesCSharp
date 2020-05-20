@@ -4,18 +4,17 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Text;
-using System.Text.Encodings;
 using System.Media;
 
 namespace tetris
 {
     class Program
     {
-
+        // the code was made for education purpose with the support of the Software University and videos of Nikolay Kostov
         //Settings 
         static int TetrisRows = 21;
         static int TetrisCols = 10;
-        static int InfoCols = 25;
+        static int InfoCols = 20;
         static int ConsoleRows = 1 + TetrisRows + 1;
         static int ConsoleCols = 1 + TetrisCols + 1 + InfoCols + 1;
         static List<bool[,]> TetrisFigures = new List<bool[,]>()
@@ -110,9 +109,9 @@ namespace tetris
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.Title = "Tetris V1.0 by y.yordanov21";
             Console.CursorVisible = false;
-            Console.WindowHeight = ConsoleRows + 1;
+            Console.WindowHeight = ConsoleRows;
             Console.WindowWidth = ConsoleCols;
-            Console.BufferHeight = ConsoleRows + 1;
+            Console.BufferHeight = ConsoleRows;
             Console.BufferWidth = ConsoleCols;
             CurrentFigure = TetrisFigures[Random.Next(0, TetrisFigures.Count)];
             NextFigure = TetrisFigures[Random.Next(0, TetrisFigures.Count)];
@@ -466,9 +465,10 @@ namespace tetris
             //Write($"{CurrentFigureCol}, {CurrentFigureCol}", 16, TetrisCols + 3);
             Write("Keys:", 18, TetrisCols + 3);
             Write("  ^  ", 19, TetrisCols + 3);
-            Write("< v >", 20, TetrisCols + 3);
-            Write("Pause:", 18, TetrisCols + 15);
-            Write("space", 20, TetrisCols + 15);
+            Write("<   >", 20, TetrisCols + 3);
+            Write("  v ", 21, TetrisCols + 3);
+            Write("Pause:", 18, TetrisCols + 13);
+            Write("space", 20, TetrisCols + 13);
         }
 
         static void DrawTetrisField()
@@ -531,7 +531,6 @@ namespace tetris
             Console.SetCursorPosition(0, 0);
 
             //drawing border
-
             string firstLine = "╔";
             firstLine += new string('═', TetrisCols);
             firstLine += "╦";

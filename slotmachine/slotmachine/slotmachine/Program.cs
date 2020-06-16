@@ -123,22 +123,6 @@ namespace slotmachine
         {
             Console.OutputEncoding = Encoding.UTF8;
             Console.OutputEncoding = Encoding.Unicode;
-            Console.WriteLine("Welcome to Tetris Console Game by y.yordanov21.");
-            Console.WriteLine("");
-            Console.WriteLine("All rights reserved!");
-            Console.WriteLine("");
-            Console.WriteLine("Please select music: Y/N");
-            Console.Write("Play music:");
-            string music = Console.ReadLine();
-            if (music == "Y")
-            {
-                PlayGame = true;
-            }
-            else
-            {
-                PlayGame = false;
-            }
-            PlayConsoleMusic();
 
             if (File.Exists(ScoresFileName))
             {

@@ -37,7 +37,9 @@ namespace snake
         static readonly string FigureSymbol = "o";
         static readonly string SnakeHeadFigureSymbol = "O";
         static readonly string SnakeHeadFigureSymbolOpstacle = "@"; 
-        static string OpstacleSymbol = "ψ";  
+        static string OpstacleSymbol = "ψ";
+        //static string[] OpstacleSymbolArray = { "⛄", "⚡", "⚓", "☆", "☀", "☃", "☕", "♠", "♡", "♣" };
+        static string[] OpstacleSymbolArray = { "a", "s", "d", "8", "*", "+", "@", "&", "#", "$" };
         //start snake possition
         static int SnakeFigureRow = 1;
         static int SnakeFigureCol = 12;
@@ -427,7 +429,12 @@ namespace snake
         {
             for (int i = 0; i < SnakeEmenents.Count; i++)
             {
-                Write($"{OpstacleSymbol}", CurrentOpstacle.rowPossition, CurrentOpstacle.colPossition, ConsoleColor.Yellow);
+                //draw random OpstacleSymbol from  OpstacleSymbolArray
+               // string currentOpstacleSymbol = OpstacleSymbolArray[Random.Next(0, OpstacleSymbolArray.Length - 1)];
+               // Write($"{currentOpstacleSymbol}", CurrentOpstacle.rowPossition, CurrentOpstacle.colPossition, ConsoleColor.Yellow);
+                
+                //draw OpstacleSymbol
+                 Write($"{OpstacleSymbol}", CurrentOpstacle.rowPossition, CurrentOpstacle.colPossition, ConsoleColor.Yellow);
             }
         }
 

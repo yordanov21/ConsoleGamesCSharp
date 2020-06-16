@@ -15,7 +15,7 @@ namespace slotmachine
         //Settings 
         static int TetrisRows = 24;
         static int TetrisCols = 14;
-        static int InfoCols = 20;
+        static int InfoCols = 25;
         static int InfoBottonRows = 10;
         static int ConsoleRows = 1 + TetrisRows + InfoBottonRows + 1;
         static int ConsoleCols = 1 + TetrisCols + 1 + InfoCols + 1;
@@ -26,6 +26,20 @@ namespace slotmachine
                 {false,  true,  false,false },
                 {true, false, false, false },
             };
+        static bool[,] Template = new bool[,] // 7 ----
+     {
+                {true, true, true, true },
+                {true, false, true, true },
+                {true,  true,  false,true},
+                {true, true, true,true },
+     };
+        static bool[,] EmptyTemplate = new bool[,] // 7 ----
+   {
+                {false, false, false, false },
+                {false, false, false, false},
+                {true, true, true, true },
+                {false, false, false, false },
+   };
         static List<bool[,]> TetrisFigures = new List<bool[,]>()
         {
             Seven,
@@ -66,10 +80,10 @@ namespace slotmachine
             },
             new bool[,] // Line2
             {
+                {false, false, false, false },
                 {true, true, true, true },
-                {false, false, false, false },
-                {false, false, false, false },
                 {true, true, true, true},
+                {false, false, false, false},
             }
         };
 
@@ -102,6 +116,8 @@ namespace slotmachine
         static bool PauseMode = false;
         static bool PlayGame = true;
         static int SongLevel = 2;
+        static bool MusicPlayer = true;
+        static readonly SoundPlayer player = new SoundPlayer();
 
         static void Main(string[] args)
         {
@@ -131,6 +147,12 @@ namespace slotmachine
                 {
                     var match = Regex.Match(score, @" => (?<score>[0-9]+)");
                     MoneyRecord = Math.Max(MoneyRecord, int.Parse(match.Groups["score"].Value));
+                }
+
+                if (MusicPlayer)
+                {
+                    player.SoundLocation = @"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\slotMachine.wav";
+                    player.PlayLooping();
                 }
             }
 
@@ -164,9 +186,13 @@ namespace slotmachine
                         Write("║     Pause     ║", 7, 15);
                         Write("║               ║", 8, 15);
                         Write("╚═══════════════╝", 9, 15);
-                        //TODO music don't STOP after pause 
-                        PlayGame = false;
+                      
+                        player.Stop();
                         Console.ReadKey();
+                        if (MusicPlayer)
+                        {
+                            player.PlayLooping();
+                        }
                     }
 
                     if (key.Key == ConsoleKey.Spacebar && PauseMode == true)
@@ -186,25 +212,63 @@ namespace slotmachine
                     {
                         PauseMode = true;
                         int currentWin = 0;
-                        if (MiddleFigure1 == MiddleFigure2 && MiddleFigure2 == MiddleFigure3)
+                          //777
+                        if (MiddleFigure1 == MiddleFigure2 && MiddleFigure2 == MiddleFigure3 && MiddleFigure3 == Seven)
                         {
-                            currentWin += 10 * Bet;
+                            currentWin += 1000 * Bet;
+                            DrawNextFigure(MiddleFigure1, 10, 0, ConsoleColor.DarkRed);
+                            DrawNextFigure(MiddleFigure2, 10, 5, ConsoleColor.DarkRed);
+                            DrawNextFigure(MiddleFigure3, 10, 10, ConsoleColor.DarkRed);
                         }
+                        //77
+                        else if (MiddleFigure1 == MiddleFigure2 && MiddleFigure2 == Seven)
+                        {
+                            currentWin += 100 * Bet;
+                            DrawNextFigure(MiddleFigure1, 10, 0, ConsoleColor.DarkRed);
+                            DrawNextFigure(MiddleFigure2, 10, 5, ConsoleColor.DarkRed);
+
+                        }
+                        //###
+                        else if (MiddleFigure1 == MiddleFigure2 && MiddleFigure2 == MiddleFigure3 && MiddleFigure1 == MiddleFigure3)
+                        {
+                            currentWin += 100 * Bet;
+                            DrawNextFigure(MiddleFigure1, 10, 0, ConsoleColor.DarkRed);
+                            DrawNextFigure(MiddleFigure2, 10, 5, ConsoleColor.DarkRed);
+                            DrawNextFigure(MiddleFigure3, 10, 10, ConsoleColor.DarkRed);
+                        }
+                        //##-
                         else if (MiddleFigure1 == MiddleFigure2)
                         {
-                            currentWin += 1 * Bet;
+                            currentWin += 10 * Bet;
+                            DrawNextFigure(MiddleFigure1, 10, 0, ConsoleColor.DarkRed);
+                            DrawNextFigure(MiddleFigure2, 10, 5, ConsoleColor.DarkRed);
+
                         }
-                        else if (MiddleFigure2 == MiddleFigure3)
-                        {
-                            currentWin += 1 * Bet;
-                        }
+                        //7
                         else if (MiddleFigure1 == Seven || MiddleFigure2 == Seven || MiddleFigure3 == Seven)
                         {
                             currentWin += 1 * Bet;
-                        }
-                        else if (MiddleFigure1 == MiddleFigure2 && MiddleFigure2 == Seven)
+                            if (MiddleFigure1 == Seven)
+                            {
+                                DrawNextFigure(MiddleFigure1, 10, 0, ConsoleColor.DarkRed);
+                            }
+                            else if (MiddleFigure2 == Seven)
+                            {
+                                DrawNextFigure(MiddleFigure2, 10, 5, ConsoleColor.DarkRed);
+                            }
+                            else if (MiddleFigure3 == Seven)
+                            {
+                                DrawNextFigure(MiddleFigure3, 10, 10, ConsoleColor.DarkRed);
+                            }
+                           
+                        }                                                                  
+                        //-##
+                        else if (MiddleFigure2 == MiddleFigure3)
                         {
-                            currentWin += 5 * Bet;
+                            currentWin += 1 * Bet;
+
+                            DrawNextFigure(MiddleFigure2, 10, 5, ConsoleColor.DarkRed);
+                            DrawNextFigure(MiddleFigure3, 10, 10, ConsoleColor.DarkRed);
                         }
                         else
                         {
@@ -226,8 +290,17 @@ namespace slotmachine
                                 Write("║     Win:     ║", 7, 17);
                                 Write($"║      {currentWinAsString} ║", 8, 17);
                                 Write("╚══════════════╝", 9, 17);
-                                PlayGame = false;
-                                // PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\gameover.wav");
+
+                                new Thread(() =>
+                                {
+                                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\YouWon.wav");
+                                }).Start();
+                                Thread.Sleep(1500);
+                                if (MusicPlayer)
+                                {
+                                    player.Play();
+                                }
+
                             }
                             else
                             {
@@ -245,7 +318,7 @@ namespace slotmachine
                         }
                         else
                         {
-                                             
+
                             Write("╔══════════════╗", 5, 5);
                             Write("║  Game        ║", 6, 5);
                             Write("║     over!    ║", 7, 5);
@@ -258,14 +331,14 @@ namespace slotmachine
                         }
 
 
-                        //  PlayGame = false;
+                        PlayGame = false;
                         Console.ReadKey();
                     }
                     if (key.Key == ConsoleKey.Enter && PauseMode == true)
                     {
                         PlayGame = true;
 
-                        // PlayConsoleMusic();
+                        PlayConsoleMusic();
                         PauseMode = false;
                     }
 
@@ -289,7 +362,11 @@ namespace slotmachine
 
                     if (key.Key == ConsoleKey.UpArrow || key.Key == ConsoleKey.W)
                     {
-                        Bet += 10;
+                        if (Money - 10 >= Bet)
+                        {
+                            Bet += 10;
+                        }
+
                     }
 
                     if (key.Key == ConsoleKey.DownArrow || key.Key == ConsoleKey.S)
@@ -476,12 +553,12 @@ namespace slotmachine
                 MoneyRecord = Money;
             }
 
-            Write("BET:", 1, TetrisCols + 3);
-            Write(Bet.ToString(), 1, TetrisCols + 8);
-            Write("Money:", 3, TetrisCols + 3);
-            Write(Money.ToString(), 3, TetrisCols + 10);
-            Write("Record:", 5, TetrisCols + 3);
-            Write(MoneyRecord.ToString(), 5, TetrisCols + 10);
+            Write("BET:", TetrisRows + 2, TetrisCols + 3);
+            Write(Bet.ToString(), TetrisRows + 2, TetrisCols + 8);
+            Write("Money:", TetrisRows + 4, TetrisCols + 3);
+            Write(Money.ToString(), TetrisRows + 4, TetrisCols + 10);
+            Write("Record:", TetrisRows + 6, TetrisCols + 3);
+            Write(MoneyRecord.ToString(), TetrisRows + 6, TetrisCols + 10);
 
             Write("Keys:", TetrisRows + 2, 2);
             Write("BET + : ^", TetrisRows + 3, 2);
@@ -491,6 +568,29 @@ namespace slotmachine
 
             Write("Pause:", TetrisRows + 9, 2);
             Write("space", TetrisRows + 10, 2);
+
+            Write("- 1BET", 3, TetrisCols + 18);
+            Write("- 100BET", 7, TetrisCols + 18);
+            Write("- 1000BET", 11, TetrisCols + 18);
+            Write("- 1BET", 15, TetrisCols + 18);
+            Write("- 10BET", 19, TetrisCols + 18);
+            Write("- 100BET", 23, TetrisCols + 18);
+
+            DrawNextFigure(Seven, 0, TetrisCols + 2);
+            DrawNextFigure(Seven, 4, TetrisCols + 2);
+            DrawNextFigure(Seven, 4, TetrisCols + 2 + 5);
+            DrawNextFigure(Seven, 8, TetrisCols + 2);
+            DrawNextFigure(Seven, 8, TetrisCols + 2 + 5);
+            DrawNextFigure(Seven, 8, TetrisCols + 2 + 10);
+            DrawNextFigure(EmptyTemplate, 12, TetrisCols + 2);
+            DrawNextFigure(Template, 12, TetrisCols + 2 + 5);
+            DrawNextFigure(Template, 12, TetrisCols + 2 + 10);
+            DrawNextFigure(Template, 16, TetrisCols + 2);
+            DrawNextFigure(Template, 16, TetrisCols + 2 + 5);
+            DrawNextFigure(EmptyTemplate, 16, TetrisCols + 2 + 10);
+            DrawNextFigure(Template, 20, TetrisCols + 2);
+            DrawNextFigure(Template, 20, TetrisCols + 2 + 5);
+            DrawNextFigure(Template, 20, TetrisCols + 2 + 10);
         }
 
 
@@ -540,7 +640,7 @@ namespace slotmachine
             DrawNextFigure(nextFig4, row + 15, col);
             DrawNextFigure(nextFig5, row + 20, col);
         }
-        static void DrawNextFigure(bool[,] nextFigure, int NextFigureRow, int NextFigureCol)
+        static void DrawNextFigure(bool[,] nextFigure, int NextFigureRow, int NextFigureCol, ConsoleColor color = ConsoleColor.Cyan)
         {
 
             for (int row = 0; row < nextFigure.GetLength(0); row++)
@@ -550,7 +650,7 @@ namespace slotmachine
                 {
                     if (nextFigure[row, col])
                     {
-                        Write($"{FigureSymbol}", row + 1 + NextFigureRow, col + 1 + NextFigureCol, ConsoleColor.Cyan);
+                        Write($"{FigureSymbol}", row + 1 + NextFigureRow, col + 1 + NextFigureCol, color);
                     }
                 }
             }
@@ -584,13 +684,24 @@ namespace slotmachine
 
             }
 
-            string endLine = "╚";
+            //  string endLine = "╚";
+            string endLine = "║";
             endLine += new string('═', TetrisCols);
-            endLine += "╩";
+            //endLine += "╩";
+            //endLine += "╝";
+            endLine += "╬";
             endLine += new string('═', InfoCols);
-            endLine += "╝";
+            endLine += "║";
 
-            string borderFrame = firstLine + "\n" + middleLine + endLine;
+            string bottonSection = "";
+            for (int i = 0; i < InfoBottonRows - 1; i++)
+            {
+                bottonSection += "║" + new string(' ', TetrisCols) + "║" + new string(' ', InfoCols) + "║" + "\n";
+            }
+
+            bottonSection += "╚" + new string('═', TetrisCols) + "╩" + new string('═', InfoCols) + "╝";
+
+            string borderFrame = firstLine + "\n" + middleLine + endLine + bottonSection;
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.Write(borderFrame);
         }
@@ -604,29 +715,30 @@ namespace slotmachine
 
         private static void PlayConsoleMusic()
         {
-            //if (PauseMode == false)
-            //{
-            //    new Thread(() =>
-            //    {
-            //        if (PlayGame)
-            //        {
-            //            var gameMusic = new SoundPlayer();
-            //            while (PlayGame)
-            //            {
-            //                gameMusic.SoundLocation = @"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\tetris-gameboy-02 (1).wav";
-            //                gameMusic.PlaySync();
-            //            }
-            //        }
+            if (PauseMode == false)
+            {
+                new Thread(() =>
+                {
+                    if (PlayGame)
+                    {
+                        var gameMusic = new SoundPlayer();
+                        while (PlayGame)
+                        {
+                            gameMusic.SoundLocation = @"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\slotMachine.wav";
+                            gameMusic.PlaySync();
+                        }
+                    }
 
-            //    }).Start();
-            //}
+                }).Start();
+            }
         }
 
         static void PlayMusic(string songUrl)
         {
-            //var myPlayer = new SoundPlayer();
-            //myPlayer.SoundLocation = songUrl;
-            //myPlayer.Play();
+            var myPlayer = new SoundPlayer();
+            myPlayer.SoundLocation = songUrl;
+            myPlayer.Play();
         }
+
     }
 }

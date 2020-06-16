@@ -1,0 +1,13 @@
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\slotmachine\slotmachine\slotmachine\bin\Debug\netcoreapp3.1\slotmachine.exe
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\slotmachine\slotmachine\slotmachine\bin\Debug\netcoreapp3.1\slotmachine.deps.json
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\slotmachine\slotmachine\slotmachine\bin\Debug\netcoreapp3.1\slotmachine.runtimeconfig.json
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\slotmachine\slotmachine\slotmachine\bin\Debug\netcoreapp3.1\slotmachine.runtimeconfig.dev.json
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\slotmachine\slotmachine\slotmachine\bin\Debug\netcoreapp3.1\slotmachine.dll
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\slotmachine\slotmachine\slotmachine\bin\Debug\netcoreapp3.1\slotmachine.pdb
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\slotmachine\slotmachine\slotmachine\obj\Debug\netcoreapp3.1\slotmachine.csprojAssemblyReference.cache
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\slotmachine\slotmachine\slotmachine\obj\Debug\netcoreapp3.1\slotmachine.AssemblyInfoInputs.cache
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\slotmachine\slotmachine\slotmachine\obj\Debug\netcoreapp3.1\slotmachine.AssemblyInfo.cs
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\slotmachine\slotmachine\slotmachine\obj\Debug\netcoreapp3.1\slotmachine.csproj.CoreCompileInputs.cache
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\slotmachine\slotmachine\slotmachine\obj\Debug\netcoreapp3.1\slotmachine.dll
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\slotmachine\slotmachine\slotmachine\obj\Debug\netcoreapp3.1\slotmachine.pdb
+C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\slotmachine\slotmachine\slotmachine\obj\Debug\netcoreapp3.1\slotmachine.genruntimeconfig.cache

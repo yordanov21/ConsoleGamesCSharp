@@ -11,38 +11,38 @@ namespace slotmachine
 {
     class Program
     {
-        // the code was made for education purpose with the support of the Software University and videos of Nikolay Kostov
+
         //Settings 
-        static int TetrisRows = 24;
-        static int TetrisCols = 14;
+        static int GameFieldRows = 24;
+        static int GameFieldCols = 14;
         static int InfoCols = 25;
         static int InfoBottonRows = 10;
-        static int ConsoleRows = 1 + TetrisRows + InfoBottonRows + 1;
-        static int ConsoleCols = 1 + TetrisCols + 1 + InfoCols + 1;
-        static bool[,] Seven = new bool[,] // 7 ----
+        static int ConsoleRows = 1 + GameFieldRows + InfoBottonRows + 1;
+        static int ConsoleCols = 1 + GameFieldCols + 1 + InfoCols + 1;
+        static bool[,] SevenFig = new bool[,] // 7 ----
             {
                 {true, true, true, true },
                 {false, false, true, false },
                 {false,  true,  false,false },
                 {true, false, false, false },
             };
-        static bool[,] Template = new bool[,] // 7 ----
+        static bool[,] TemplateFig = new bool[,] // 7 ----
      {
                 {true, true, true, true },
                 {true, false, true, true },
                 {true,  true,  false,true},
                 {true, true, true,true },
      };
-        static bool[,] EmptyTemplate = new bool[,] // 7 ----
+        static bool[,] EmptyTemplateFig = new bool[,] // 7 ----
    {
                 {false, false, false, false },
                 {false, false, false, false},
                 {true, true, true, true },
                 {false, false, false, false },
    };
-        static List<bool[,]> TetrisFigures = new List<bool[,]>()
+        static List<bool[,]> SlotMachineFigures = new List<bool[,]>()
         {
-            Seven,
+            SevenFig,
             new bool [,] // O
             {
                {false, true, true, false },
@@ -84,38 +84,24 @@ namespace slotmachine
                 {true, true, true, true },
                 {true, true, true, true},
                 {false, false, false, false},
-            }
+            },
+            TemplateFig,
         };
 
         static bool[,] MiddleFigure1;
         static bool[,] MiddleFigure2;
         static bool[,] MiddleFigure3;
-        static string ScoresFileName = "scores.txt";
+        static readonly string ScoresFileName = "scores.txt";
 
         //State
         static int MoneyRecord = 0;
         static int Money = 100;
-        static int Frame = 0;
         static int Bet = 10;
         static string FigureSymbol = "#";
-        static int FrameToMoveFigure = 16;
-        static bool[,] CurrentFigureOne = null;
-        static int CurrentFigureRowOne = 0;
-        static int CurrentFigureColOne = 0;
-        static bool[,] CurrentFigureTwo = null;
-        static int CurrentFigureRowTwo = 0;
-        static int CurrentFigureColTwo = 4;
-        static bool[,] CurrentFigureThree = null;
-        static int CurrentFigureRowThree = 0;
-        static int CurrentFigureColThree = 8;
         static bool[,] NextFigure = null;
-        static int NextFigureRow = 14;
-        static int NextFigureCol = TetrisCols + 3;
-        static bool[,] TetrisField = new bool[TetrisRows, TetrisCols];
         static Random Random = new Random();
         static bool PauseMode = false;
         static bool PlayGame = true;
-        static int SongLevel = 2;
         static bool MusicPlayer = true;
         static readonly SoundPlayer player = new SoundPlayer();
 
@@ -147,14 +133,11 @@ namespace slotmachine
             Console.WindowWidth = ConsoleCols;
             Console.BufferHeight = ConsoleRows;
             Console.BufferWidth = ConsoleCols;
-            CurrentFigureOne = TetrisFigures[Random.Next(0, TetrisFigures.Count)];
-            CurrentFigureTwo = TetrisFigures[Random.Next(0, TetrisFigures.Count)];
-            CurrentFigureThree = TetrisFigures[Random.Next(0, TetrisFigures.Count)];
-            NextFigure = TetrisFigures[Random.Next(0, TetrisFigures.Count)];
+            
+            NextFigure = SlotMachineFigures[Random.Next(0, SlotMachineFigures.Count)];
 
             while (true)
-            {
-                Frame++;
+            {     
                 // UpdateLevel();
 
                 // Read user input
@@ -170,7 +153,7 @@ namespace slotmachine
                         Write("║     Pause     ║", 7, 15);
                         Write("║               ║", 8, 15);
                         Write("╚═══════════════╝", 9, 15);
-                      
+
                         player.Stop();
                         Console.ReadKey();
                         if (MusicPlayer)
@@ -178,7 +161,6 @@ namespace slotmachine
                             player.PlayLooping();
                         }
                     }
-
                     if (key.Key == ConsoleKey.Spacebar && PauseMode == true)
                     {
                         PlayGame = true;
@@ -196,77 +178,79 @@ namespace slotmachine
                     {
                         PauseMode = true;
                         int currentWin = 0;
-                          //777
-                        if (MiddleFigure1 == MiddleFigure2 && MiddleFigure2 == MiddleFigure3 && MiddleFigure3 == Seven)
+                        //777
+                        if (MiddleFigure1 == MiddleFigure2 && MiddleFigure2 == MiddleFigure3 && MiddleFigure3 == SevenFig)
                         {
                             currentWin += 1000 * Bet;
-                            DrawNextFigure(MiddleFigure1, 10, 0, ConsoleColor.DarkRed);
-                            DrawNextFigure(MiddleFigure2, 10, 5, ConsoleColor.DarkRed);
-                            DrawNextFigure(MiddleFigure3, 10, 10, ConsoleColor.DarkRed);
+                            DrawFigure(MiddleFigure1, 10, 0, ConsoleColor.DarkRed);
+                            DrawFigure(MiddleFigure2, 10, 5, ConsoleColor.DarkRed);
+                            DrawFigure(MiddleFigure3, 10, 10, ConsoleColor.DarkRed);
                         }
                         //77
-                        else if (MiddleFigure1 == MiddleFigure2 && MiddleFigure2 == Seven)
+                        else if (MiddleFigure1 == MiddleFigure2 && MiddleFigure2 == SevenFig)
                         {
                             currentWin += 100 * Bet;
-                            DrawNextFigure(MiddleFigure1, 10, 0, ConsoleColor.DarkRed);
-                            DrawNextFigure(MiddleFigure2, 10, 5, ConsoleColor.DarkRed);
+                            DrawFigure(MiddleFigure1, 10, 0, ConsoleColor.DarkRed);
+                            DrawFigure(MiddleFigure2, 10, 5, ConsoleColor.DarkRed);
 
                         }
                         //###
                         else if (MiddleFigure1 == MiddleFigure2 && MiddleFigure2 == MiddleFigure3 && MiddleFigure1 == MiddleFigure3)
                         {
                             currentWin += 100 * Bet;
-                            DrawNextFigure(MiddleFigure1, 10, 0, ConsoleColor.DarkRed);
-                            DrawNextFigure(MiddleFigure2, 10, 5, ConsoleColor.DarkRed);
-                            DrawNextFigure(MiddleFigure3, 10, 10, ConsoleColor.DarkRed);
+                            DrawFigure(MiddleFigure1, 10, 0, ConsoleColor.DarkRed);
+                            DrawFigure(MiddleFigure2, 10, 5, ConsoleColor.DarkRed);
+                            DrawFigure(MiddleFigure3, 10, 10, ConsoleColor.DarkRed);
                         }
                         //##-
                         else if (MiddleFigure1 == MiddleFigure2)
                         {
                             currentWin += 10 * Bet;
-                            DrawNextFigure(MiddleFigure1, 10, 0, ConsoleColor.DarkRed);
-                            DrawNextFigure(MiddleFigure2, 10, 5, ConsoleColor.DarkRed);
+                            DrawFigure(MiddleFigure1, 10, 0, ConsoleColor.DarkRed);
+                            DrawFigure(MiddleFigure2, 10, 5, ConsoleColor.DarkRed);
 
                         }
                         //7
-                        else if (MiddleFigure1 == Seven || MiddleFigure2 == Seven || MiddleFigure3 == Seven)
+                        else if (MiddleFigure1 == SevenFig || MiddleFigure2 == SevenFig || MiddleFigure3 == SevenFig)
                         {
                             currentWin += 1 * Bet;
-                            if (MiddleFigure1 == Seven)
+                            if (MiddleFigure1 == SevenFig)
                             {
-                                DrawNextFigure(MiddleFigure1, 10, 0, ConsoleColor.DarkRed);
+                                DrawFigure(MiddleFigure1, 10, 0, ConsoleColor.DarkRed);
                             }
-                            else if (MiddleFigure2 == Seven)
+                            else if (MiddleFigure2 == SevenFig)
                             {
-                                DrawNextFigure(MiddleFigure2, 10, 5, ConsoleColor.DarkRed);
+                                DrawFigure(MiddleFigure2, 10, 5, ConsoleColor.DarkRed);
                             }
-                            else if (MiddleFigure3 == Seven)
+                            else if (MiddleFigure3 == SevenFig)
                             {
-                                DrawNextFigure(MiddleFigure3, 10, 10, ConsoleColor.DarkRed);
+                                DrawFigure(MiddleFigure3, 10, 10, ConsoleColor.DarkRed);
                             }
-                           
-                        }                                                                  
+
+                        }
                         //-##
                         else if (MiddleFigure2 == MiddleFigure3)
                         {
                             currentWin += 1 * Bet;
 
-                            DrawNextFigure(MiddleFigure2, 10, 5, ConsoleColor.DarkRed);
-                            DrawNextFigure(MiddleFigure3, 10, 10, ConsoleColor.DarkRed);
+                            DrawFigure(MiddleFigure2, 10, 5, ConsoleColor.DarkRed);
+                            DrawFigure(MiddleFigure3, 10, 10, ConsoleColor.DarkRed);
                         }
                         else
                         {
                             currentWin = -Bet;
                         }
+
                         Money += currentWin;
+
                         if (Money > 0)
                         {
                             if (currentWin >= 0)
                             {
                                 File.AppendAllLines(ScoresFileName, new List<string>
-                     {
-                         $"[{DateTime.Now.ToString()}] {Environment.UserName} => {Money}"
-                     });
+                                {
+                                  $"[{DateTime.Now.ToString()}] {Environment.UserName} => {Money}"
+                                });
                                 var currentWinAsString = currentWin.ToString();
                                 currentWinAsString += new string(' ', 7 - currentWinAsString.Length);
                                 Write("╔══════════════╗", 5, 17);
@@ -284,7 +268,6 @@ namespace slotmachine
                                 {
                                     player.Play();
                                 }
-
                             }
                             else
                             {
@@ -302,7 +285,6 @@ namespace slotmachine
                         }
                         else
                         {
-
                             Write("╔══════════════╗", 5, 5);
                             Write("║  Game        ║", 6, 5);
                             Write("║     over!    ║", 7, 5);
@@ -314,7 +296,6 @@ namespace slotmachine
                             return;
                         }
 
-
                         PlayGame = false;
                         Console.ReadKey();
                     }
@@ -325,24 +306,6 @@ namespace slotmachine
                         PlayConsoleMusic();
                         PauseMode = false;
                     }
-
-                    //if (key.Key == ConsoleKey.LeftArrow || key.Key == ConsoleKey.A)
-                    //{
-
-                    //    if (CurrentFigureColOne >= 1)
-                    //    {
-                    //        CurrentFigureColOne--;
-                    //    }
-
-                    //}
-
-                    //if (key.Key == ConsoleKey.RightArrow || key.Key == ConsoleKey.D)
-                    //{
-                    //    if ((CurrentFigureColOne < TetrisCols - CurrentFigureOne.GetLength(1)))
-                    //    {
-                    //        CurrentFigureColOne++;
-                    //    }
-                    //}
 
                     if (key.Key == ConsoleKey.UpArrow || key.Key == ConsoleKey.W)
                     {
@@ -363,57 +326,13 @@ namespace slotmachine
                     }
                 }
 
-                //Update the game state
-                if (Frame % (FrameToMoveFigure) == 0)
-                {
-                    //CurrentFigureRowOne++;
-                    CurrentFigureRowTwo++;
-                    CurrentFigureRowThree++;
-                    Frame = 0;
-
-                }
-                // user input
-                // change state
-                //if (Collision(CurrentFigure))
-                //{
-                //    AddCurrentFigureToTetrisField();
-                //    int lines = CheckForFullLines();
-                //    //add points to score
-                //    Score += ScorePerLines[lines] * Level;
-                //    //CurrentFigure = NextFigure;
-                //    CurrentFigureCol = 0;
-                //    CurrentFigureRow = 0;
-
-                //    //game over!
-                //    if (Collision(CurrentFigure))
-                //    {
-                //        File.AppendAllLines(ScoresFileName, new List<string>
-                //        {
-                //            $"[{DateTime.Now.ToString()}] {Environment.UserName} => {Score}"
-                //        });
-                //        var scoreAsString = Score.ToString();
-                //        scoreAsString += new string(' ', 7 - scoreAsString.Length);
-                //        Write("╔══════════════╗", 5, 5);
-                //        Write("║  Game        ║", 6, 5);
-                //        Write("║     over!    ║", 7, 5);
-                //        Write($"║      {scoreAsString} ║", 8, 5);
-                //        Write("╚══════════════╝", 9, 5);
-                //        PlayGame = false;
-                //        PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\gameover.wav");
-                //        Thread.Sleep(1000000);
-                //        return;
-                //    }
-                //}
-
-
-
                 //Redraw UI
                 DrawBorder();
                 DrawInfo();
 
-                DrawCurrentFigureOne(0, 0);
-                DrawCurrentFigureTwo(0, 5);
-                DrawCurrentFigureThree(0, 10);
+                DrawFigureLineOne(0, 0);
+                DrawFigureLineTwo(0, 5);
+                DrawFigureLineThree(0, 10);
 
                 //wait 300 miliseconds
                 Thread.Sleep(300);
@@ -424,111 +343,9 @@ namespace slotmachine
 
         private static bool[,] GetNextFigure()
         {
-            NextFigure = TetrisFigures[Random.Next(0, TetrisFigures.Count)];
+            NextFigure = SlotMachineFigures[Random.Next(0, SlotMachineFigures.Count)];
             return NextFigure;
         }
-
-        private static void UpdateLevel()
-        {
-            if (Money <= 0)
-            {
-                Bet = 1;
-            }
-
-            if (Money >= 1000 && SongLevel == 2)
-            {
-                Bet = 2;
-                SongLevel++;
-                new Thread(() =>
-                {
-                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
-                }).Start();
-            }
-            else if (Money == 5000 && SongLevel == 3)
-            {
-                Bet = 3;
-                SongLevel++;
-                new Thread(() =>
-                {
-                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
-                }).Start();
-            }
-            else if (Money == 10000 && SongLevel == 4)
-            {
-                Bet = 4;
-                SongLevel++;
-                new Thread(() =>
-                {
-                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
-                }).Start();
-            }
-            else if (Money == 20000 && SongLevel == 5)
-            {
-                Bet = 5;
-                SongLevel++;
-                new Thread(() =>
-                {
-                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
-                }).Start();
-            }
-            else if (Money == 50000 && SongLevel == 6)
-            {
-                Bet = 6;
-                SongLevel++;
-                new Thread(() =>
-                {
-                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
-                }).Start();
-            }
-            else if (Money == 100000 && SongLevel == 7)
-            {
-                Bet = 7;
-                SongLevel++;
-                new Thread(() =>
-                {
-                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
-                }).Start();
-            }
-            else if (Money == 250000 && SongLevel == 8)
-            {
-                Bet = 8;
-                SongLevel++;
-                new Thread(() =>
-                {
-                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
-                }).Start();
-            }
-            else if (Money == 500000 && SongLevel == 9)
-            {
-                Bet = 9;
-                SongLevel++;
-                new Thread(() =>
-                {
-                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
-                }).Start();
-            }
-            else if (Money == 1000000 && SongLevel == 10)
-            {
-                Bet = 10;
-                SongLevel++;
-                new Thread(() =>
-                {
-                    PlayMusic(@"C:\Users\yyord\OneDrive\Desktop\My projects\Console_Games\ConsoleGamesCSharp\songs\success.wav");
-                }).Start();
-            }
-            //Level = (int)Math.Log10(Score) - 1;
-
-            //if (Level < 1)
-            //{
-            //    Level = 1;
-            //}
-            //if (Level > 10)
-            //{
-            //    Level = 10;
-            //}
-
-        }
-
 
         static void DrawInfo()
         {
@@ -537,48 +354,47 @@ namespace slotmachine
                 MoneyRecord = Money;
             }
 
-            Write("BET:", TetrisRows + 2, TetrisCols + 3);
-            Write(Bet.ToString(), TetrisRows + 2, TetrisCols + 8);
-            Write("Money:", TetrisRows + 4, TetrisCols + 3);
-            Write(Money.ToString(), TetrisRows + 4, TetrisCols + 10);
-            Write("Record:", TetrisRows + 6, TetrisCols + 3);
-            Write(MoneyRecord.ToString(), TetrisRows + 6, TetrisCols + 10);
+            Write("BET:", GameFieldRows + 2, GameFieldCols + 3);
+            Write(Bet.ToString(), GameFieldRows + 2, GameFieldCols + 8);
+            Write("Money:", GameFieldRows + 4, GameFieldCols + 3);
+            Write(Money.ToString(), GameFieldRows + 4, GameFieldCols + 10);
+            Write("Record:", GameFieldRows + 6, GameFieldCols + 3);
+            Write(MoneyRecord.ToString(), GameFieldRows + 6, GameFieldCols + 10);
 
-            Write("Keys:", TetrisRows + 2, 2);
-            Write("BET + : ^", TetrisRows + 3, 2);
-            Write("BET - : v", TetrisRows + 4, 2);
-            Write("ENTER:", TetrisRows + 6, 2);
-            Write("for Gaming", TetrisRows + 7, 2);
+            Write("Keys:", GameFieldRows + 2, 2);
+            Write("BET + : ^", GameFieldRows + 3, 2);
+            Write("BET - : v", GameFieldRows + 4, 2);
+            Write("ENTER:", GameFieldRows + 6, 2);
+            Write("for Gaming", GameFieldRows + 7, 2);
 
-            Write("Pause:", TetrisRows + 9, 2);
-            Write("space", TetrisRows + 10, 2);
+            Write("Pause:", GameFieldRows + 9, 2);
+            Write("space", GameFieldRows + 10, 2);
 
-            Write("- 1BET", 3, TetrisCols + 18);
-            Write("- 100BET", 7, TetrisCols + 18);
-            Write("- 1000BET", 11, TetrisCols + 18);
-            Write("- 1BET", 15, TetrisCols + 18);
-            Write("- 10BET", 19, TetrisCols + 18);
-            Write("- 100BET", 23, TetrisCols + 18);
+            Write("- 1BET", 3, GameFieldCols + 18);
+            Write("- 100BET", 7, GameFieldCols + 18);
+            Write("- 1000BET", 11, GameFieldCols + 18);
+            Write("- 1BET", 15, GameFieldCols + 18);
+            Write("- 10BET", 19, GameFieldCols + 18);
+            Write("- 100BET", 23, GameFieldCols + 18);
 
-            DrawNextFigure(Seven, 0, TetrisCols + 2);
-            DrawNextFigure(Seven, 4, TetrisCols + 2);
-            DrawNextFigure(Seven, 4, TetrisCols + 2 + 5);
-            DrawNextFigure(Seven, 8, TetrisCols + 2);
-            DrawNextFigure(Seven, 8, TetrisCols + 2 + 5);
-            DrawNextFigure(Seven, 8, TetrisCols + 2 + 10);
-            DrawNextFigure(EmptyTemplate, 12, TetrisCols + 2);
-            DrawNextFigure(Template, 12, TetrisCols + 2 + 5);
-            DrawNextFigure(Template, 12, TetrisCols + 2 + 10);
-            DrawNextFigure(Template, 16, TetrisCols + 2);
-            DrawNextFigure(Template, 16, TetrisCols + 2 + 5);
-            DrawNextFigure(EmptyTemplate, 16, TetrisCols + 2 + 10);
-            DrawNextFigure(Template, 20, TetrisCols + 2);
-            DrawNextFigure(Template, 20, TetrisCols + 2 + 5);
-            DrawNextFigure(Template, 20, TetrisCols + 2 + 10);
+            DrawFigure(SevenFig, 0, GameFieldCols + 2);
+            DrawFigure(SevenFig, 4, GameFieldCols + 2);
+            DrawFigure(SevenFig, 4, GameFieldCols + 2 + 5);
+            DrawFigure(SevenFig, 8, GameFieldCols + 2);
+            DrawFigure(SevenFig, 8, GameFieldCols + 2 + 5);
+            DrawFigure(SevenFig, 8, GameFieldCols + 2 + 10);
+            DrawFigure(EmptyTemplateFig, 12, GameFieldCols + 2);
+            DrawFigure(TemplateFig, 12, GameFieldCols + 2 + 5);
+            DrawFigure(TemplateFig, 12, GameFieldCols + 2 + 10);
+            DrawFigure(TemplateFig, 16, GameFieldCols + 2);
+            DrawFigure(TemplateFig, 16, GameFieldCols + 2 + 5);
+            DrawFigure(EmptyTemplateFig, 16, GameFieldCols + 2 + 10);
+            DrawFigure(TemplateFig, 20, GameFieldCols + 2);
+            DrawFigure(TemplateFig, 20, GameFieldCols + 2 + 5);
+            DrawFigure(TemplateFig, 20, GameFieldCols + 2 + 10);
         }
 
-
-        static void DrawCurrentFigureOne(int row, int col)
+        static void DrawFigureLineOne(int row, int col)
         {
 
             bool[,] nextFig1 = GetNextFigure();
@@ -587,15 +403,15 @@ namespace slotmachine
             bool[,] nextFig4 = GetNextFigure();
             bool[,] nextFig5 = GetNextFigure();
 
-            DrawNextFigure(nextFig1, row, col);
-            DrawNextFigure(nextFig2, row + 5, col);
-            DrawNextFigure(MiddleFigure1, row + 10, col);
-            DrawNextFigure(nextFig4, row + 15, col);
-            DrawNextFigure(nextFig5, row + 20, col);
+            DrawFigure(nextFig1, row, col);
+            DrawFigure(nextFig2, row + 5, col);
+            DrawFigure(MiddleFigure1, row + 10, col);
+            DrawFigure(nextFig4, row + 15, col);
+            DrawFigure(nextFig5, row + 20, col);
 
 
         }
-        static void DrawCurrentFigureTwo(int row, int col)
+        static void DrawFigureLineTwo(int row, int col)
         {
 
             bool[,] nextFig1 = GetNextFigure();
@@ -604,13 +420,13 @@ namespace slotmachine
             bool[,] nextFig4 = GetNextFigure();
             bool[,] nextFig5 = GetNextFigure();
 
-            DrawNextFigure(nextFig1, row, col);
-            DrawNextFigure(nextFig2, row + 5, col);
-            DrawNextFigure(MiddleFigure2, row + 10, col);
-            DrawNextFigure(nextFig4, row + 15, col);
-            DrawNextFigure(nextFig5, row + 20, col);
+            DrawFigure(nextFig1, row, col);
+            DrawFigure(nextFig2, row + 5, col);
+            DrawFigure(MiddleFigure2, row + 10, col);
+            DrawFigure(nextFig4, row + 15, col);
+            DrawFigure(nextFig5, row + 20, col);
         }
-        static void DrawCurrentFigureThree(int row, int col)
+        static void DrawFigureLineThree(int row, int col)
         {
             bool[,] nextFig1 = GetNextFigure();
             bool[,] nextFig2 = GetNextFigure();
@@ -618,13 +434,13 @@ namespace slotmachine
             bool[,] nextFig4 = GetNextFigure();
             bool[,] nextFig5 = GetNextFigure();
 
-            DrawNextFigure(nextFig1, row, col);
-            DrawNextFigure(nextFig2, row + 5, col);
-            DrawNextFigure(MiddleFigure3, row + 10, col);
-            DrawNextFigure(nextFig4, row + 15, col);
-            DrawNextFigure(nextFig5, row + 20, col);
+            DrawFigure(nextFig1, row, col);
+            DrawFigure(nextFig2, row + 5, col);
+            DrawFigure(MiddleFigure3, row + 10, col);
+            DrawFigure(nextFig4, row + 15, col);
+            DrawFigure(nextFig5, row + 20, col);
         }
-        static void DrawNextFigure(bool[,] nextFigure, int NextFigureRow, int NextFigureCol, ConsoleColor color = ConsoleColor.Cyan)
+        static void DrawFigure(bool[,] nextFigure, int NextFigureRow, int NextFigureCol, ConsoleColor color = ConsoleColor.Cyan)
         {
 
             for (int row = 0; row < nextFigure.GetLength(0); row++)
@@ -647,32 +463,29 @@ namespace slotmachine
 
             //drawing border
             string firstLine = "╔";
-            firstLine += new string('═', TetrisCols);
+            firstLine += new string('═', GameFieldCols);
             firstLine += "╦";
             firstLine += new string('═', InfoCols);
             firstLine += "╗";
 
             string middleLine = "";
-            for (int i = 0; i < TetrisRows; i++)
+            for (int i = 0; i < GameFieldRows; i++)
             {
                 if (i == 9 || i == 14)
                 {
                     middleLine += "║";
-                    middleLine += new string('-', TetrisCols) + "║" + new string(' ', InfoCols) + "║" + "\n";
+                    middleLine += new string('-', GameFieldCols) + "║" + new string(' ', InfoCols) + "║" + "\n";
                 }
                 else
                 {
                     middleLine += "║";
-                    middleLine += new string(' ', TetrisCols) + "║" + new string(' ', InfoCols) + "║" + "\n";
+                    middleLine += new string(' ', GameFieldCols) + "║" + new string(' ', InfoCols) + "║" + "\n";
                 }
 
             }
 
-            //  string endLine = "╚";
             string endLine = "║";
-            endLine += new string('═', TetrisCols);
-            //endLine += "╩";
-            //endLine += "╝";
+            endLine += new string('═', GameFieldCols);
             endLine += "╬";
             endLine += new string('═', InfoCols);
             endLine += "║";
@@ -680,10 +493,10 @@ namespace slotmachine
             string bottonSection = "";
             for (int i = 0; i < InfoBottonRows - 1; i++)
             {
-                bottonSection += "║" + new string(' ', TetrisCols) + "║" + new string(' ', InfoCols) + "║" + "\n";
+                bottonSection += "║" + new string(' ', GameFieldCols) + "║" + new string(' ', InfoCols) + "║" + "\n";
             }
 
-            bottonSection += "╚" + new string('═', TetrisCols) + "╩" + new string('═', InfoCols) + "╝";
+            bottonSection += "╚" + new string('═', GameFieldCols) + "╩" + new string('═', InfoCols) + "╝";
 
             string borderFrame = firstLine + "\n" + middleLine + endLine + bottonSection;
             Console.ForegroundColor = ConsoleColor.Gray;
@@ -723,6 +536,5 @@ namespace slotmachine
             myPlayer.SoundLocation = songUrl;
             myPlayer.Play();
         }
-
     }
 }
